@@ -43,7 +43,7 @@ jest.mock('../../brand-short-logo', () => jest.fn(() => <div>BrandShortLogo</div
 
 describe('<Sidebar />', () => {
     const history = createMemoryHistory();
-    const defaultStore = mockStore({
+    const defaultStoreConfig = {
         ui: {
             is_dark_mode_on: false,
             active_sidebar_flyout: null,
@@ -59,7 +59,8 @@ describe('<Sidebar />', () => {
         common: {
             current_language: 'en',
         },
-    });
+    };
+    const defaultStore = mockStore(defaultStoreConfig);
 
     const renderSidebar = (store = defaultStore, route = '/') => {
         history.push(route);
@@ -89,7 +90,7 @@ describe('<Sidebar />', () => {
 
     it('should not render navigation items when user is not logged in', () => {
         const store = mockStore({
-            ...defaultStore,
+            ...defaultStoreConfig,
             client: {
                 is_logged_in: false,
             },
@@ -107,7 +108,7 @@ describe('<Sidebar />', () => {
 
     it('should display badge count when there are active positions', () => {
         const store = mockStore({
-            ...defaultStore,
+            ...defaultStoreConfig,
             portfolio: {
                 active_positions_count: 5,
             },
@@ -122,7 +123,7 @@ describe('<Sidebar />', () => {
     });
 
     it('should call setSidebarFlyout when positions button is clicked', () => {
-        const store = mockStore(defaultStore);
+        const store = mockStore(defaultStoreConfig);
         renderSidebar(store);
         const positionsButton = screen.getByTestId('dt_sidebar_positions');
         fireEvent.click(positionsButton);
@@ -131,9 +132,9 @@ describe('<Sidebar />', () => {
 
     it('should toggle positions flyout when clicking positions button twice', () => {
         const store = mockStore({
-            ...defaultStore,
+            ...defaultStoreConfig,
             ui: {
-                ...defaultStore.ui,
+                ...defaultStoreConfig.ui,
                 active_sidebar_flyout: 'positions',
             },
         });
@@ -144,7 +145,7 @@ describe('<Sidebar />', () => {
     });
 
     it('should call setSidebarFlyout when theme button is clicked', () => {
-        const store = mockStore(defaultStore);
+        const store = mockStore(defaultStoreConfig);
         renderSidebar(store);
         const themeButton = screen.getByTestId('dt_sidebar_theme');
         fireEvent.click(themeButton);
@@ -153,9 +154,9 @@ describe('<Sidebar />', () => {
 
     it('should toggle theme flyout when clicking theme button twice', () => {
         const store = mockStore({
-            ...defaultStore,
+            ...defaultStoreConfig,
             ui: {
-                ...defaultStore.ui,
+                ...defaultStoreConfig.ui,
                 active_sidebar_flyout: 'theme',
             },
         });
@@ -166,7 +167,7 @@ describe('<Sidebar />', () => {
     });
 
     it('should call setSidebarFlyout when language button is clicked', () => {
-        const store = mockStore(defaultStore);
+        const store = mockStore(defaultStoreConfig);
         renderSidebar(store);
         const languageButton = screen.getByTestId('dt_sidebar_language');
         fireEvent.click(languageButton);
@@ -175,9 +176,9 @@ describe('<Sidebar />', () => {
 
     it('should toggle language flyout when clicking language button twice', () => {
         const store = mockStore({
-            ...defaultStore,
+            ...defaultStoreConfig,
             ui: {
-                ...defaultStore.ui,
+                ...defaultStoreConfig.ui,
                 active_sidebar_flyout: 'language',
             },
         });
@@ -189,9 +190,9 @@ describe('<Sidebar />', () => {
 
     it('should render theme selector in flyout when theme is active', () => {
         const store = mockStore({
-            ...defaultStore,
+            ...defaultStoreConfig,
             ui: {
-                ...defaultStore.ui,
+                ...defaultStoreConfig.ui,
                 active_sidebar_flyout: 'theme',
             },
         });
@@ -201,9 +202,9 @@ describe('<Sidebar />', () => {
 
     it('should render language selector in flyout when language is active', () => {
         const store = mockStore({
-            ...defaultStore,
+            ...defaultStoreConfig,
             ui: {
-                ...defaultStore.ui,
+                ...defaultStoreConfig.ui,
                 active_sidebar_flyout: 'language',
             },
         });
@@ -213,9 +214,9 @@ describe('<Sidebar />', () => {
 
     it('should render positions drawer in flyout when positions is active', () => {
         const store = mockStore({
-            ...defaultStore,
+            ...defaultStoreConfig,
             ui: {
-                ...defaultStore.ui,
+                ...defaultStoreConfig.ui,
                 active_sidebar_flyout: 'positions',
             },
         });
@@ -231,9 +232,9 @@ describe('<Sidebar />', () => {
 
     it('should display sun icon when dark mode is on', () => {
         const store = mockStore({
-            ...defaultStore,
+            ...defaultStoreConfig,
             ui: {
-                ...defaultStore.ui,
+                ...defaultStoreConfig.ui,
                 is_dark_mode_on: true,
             },
         });
@@ -243,9 +244,9 @@ describe('<Sidebar />', () => {
 
     it('should mark positions button as active when positions flyout is open', () => {
         const store = mockStore({
-            ...defaultStore,
+            ...defaultStoreConfig,
             ui: {
-                ...defaultStore.ui,
+                ...defaultStoreConfig.ui,
                 active_sidebar_flyout: 'positions',
             },
         });
@@ -274,9 +275,9 @@ describe('<Sidebar />', () => {
 
     it('should call closeSidebarFlyout when flyout close button is clicked', () => {
         const store = mockStore({
-            ...defaultStore,
+            ...defaultStoreConfig,
             ui: {
-                ...defaultStore.ui,
+                ...defaultStoreConfig.ui,
                 active_sidebar_flyout: 'theme',
             },
         });
