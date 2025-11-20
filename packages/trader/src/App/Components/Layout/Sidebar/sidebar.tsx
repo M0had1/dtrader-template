@@ -14,7 +14,7 @@ import {
 } from '@deriv/quill-icons';
 import { routes } from '@deriv/shared';
 import { observer, useStore } from '@deriv/stores';
-import { localize } from '@deriv-com/translations';
+import { localize, useTranslations } from '@deriv-com/translations';
 
 import { PositionsDrawerContent, PositionsDrawerFooter } from '../../Elements/PositionsDrawer';
 
@@ -33,6 +33,7 @@ type TSidebarItem = {
 
 const Sidebar = observer(() => {
     const { ui, client, portfolio } = useStore();
+    const { currentLang } = useTranslations();
     const { is_dark_mode_on, active_sidebar_flyout, setSidebarFlyout, closeSidebarFlyout } = ui;
     const { is_logged_in } = client;
     const { active_positions_count } = portfolio;
@@ -149,7 +150,7 @@ const Sidebar = observer(() => {
         }
     };
 
-    const flyoutContent = React.useMemo(() => getFlyoutContent(), [active_sidebar_flyout]);
+    const flyoutContent = React.useMemo(() => getFlyoutContent(), [active_sidebar_flyout, currentLang]);
 
     return (
         <React.Fragment>
