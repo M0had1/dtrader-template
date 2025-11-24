@@ -2,13 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { VideoPlayer } from '@deriv/components';
+import { LabelPairedXmarkMdRegularIcon } from '@deriv/quill-icons';
 import { clickAndKeyEventHandler } from '@deriv/shared';
+import { ActionSheet, Heading, Modal } from '@deriv-com/quill-ui';
 import { Localize } from '@deriv-com/translations';
-import { ActionSheet, Heading } from '@deriv-com/quill-ui';
+import { useDevice } from '@deriv-com/ui';
 
 import { getDescriptionVideoIds } from 'AppV2/Utils/contract-description-utils';
 
 import GuideContent from './guide-content';
+
+import './guide-description-modal.scss';
 
 type TGuideDescriptionModal = {
     contract_list: { tradeType: React.ReactNode; id: string }[];
@@ -52,6 +56,7 @@ const GuideDescriptionModal = ({
 }: TGuideDescriptionModal) => {
     const [is_video_player_opened, setIsVideoPlayerOpened] = React.useState(false);
     const modal_ref = React.useRef<HTMLDialogElement>(null);
+    const { isDesktop } = useDevice();
 
     const video_src = getDescriptionVideoIds(selected_contract_type, is_dark_mode_on);
 
@@ -77,9 +82,19 @@ const GuideDescriptionModal = ({
     return (
         <React.Fragment>
             {show_description_in_a_modal ? (
-                <ActionSheet.Root isOpen={is_open} onClose={onClose} position='left' expandable={false}>
-                    <ActionSheet.Portal shouldCloseOnDrag>
-                        <ActionSheet.Content className='guide__wrapper__content'>
+                isDesktop ? (
+                    <Modal
+                        isOpened={is_open}
+                        showHandleBar={false}
+                        showSecondaryButton={false}
+                        showCrossIcon={false}
+                        isMobile={false}
+                        primaryButtonLabel={<Localize i18n_default_text='Got it' />}
+                        primaryButtonCallback={onClose}
+                        toggleModal={onClose}
+                        className='guide-desktop-modal'
+                    >
+                        <div className='guide-desktop-modal__header'>
                             <Heading.H4 className='guide__title'>
                                 {show_guide_for_selected_contract ? (
                                     selected_contract_type
@@ -87,18 +102,38 @@ const GuideDescriptionModal = ({
                                     <Localize i18n_default_text='Trade types' />
                                 )}
                             </Heading.H4>
+                            <button className='guide-desktop-modal__close' onClick={onClose} aria-label='Close'>
+                                <LabelPairedXmarkMdRegularIcon />
+                            </button>
+                        </div>
+                        <div className='guide-desktop-modal__content'>
                             <GuideContent {...guide_content_props} />
-                        </ActionSheet.Content>
-                        <ActionSheet.Footer
-                            alignment='vertical'
-                            primaryAction={{
-                                content: <Localize i18n_default_text='Got it' />,
-                                onAction: onClose,
-                            }}
-                            className='guide__button'
-                        />
-                    </ActionSheet.Portal>
-                </ActionSheet.Root>
+                        </div>
+                    </Modal>
+                ) : (
+                    <ActionSheet.Root isOpen={is_open} onClose={onClose} position='left' expandable={false}>
+                        <ActionSheet.Portal shouldCloseOnDrag>
+                            <ActionSheet.Content className='guide__wrapper__content'>
+                                <Heading.H4 className='guide__title'>
+                                    {show_guide_for_selected_contract ? (
+                                        selected_contract_type
+                                    ) : (
+                                        <Localize i18n_default_text='Trade types' />
+                                    )}
+                                </Heading.H4>
+                                <GuideContent {...guide_content_props} />
+                            </ActionSheet.Content>
+                            <ActionSheet.Footer
+                                alignment='vertical'
+                                primaryAction={{
+                                    content: <Localize i18n_default_text='Got it' />,
+                                    onAction: onClose,
+                                }}
+                                className='guide__button'
+                            />
+                        </ActionSheet.Portal>
+                    </ActionSheet.Root>
+                )
             ) : (
                 <div className='guide__wrapper__content--separate'>
                     <GuideContent {...guide_content_props} />
