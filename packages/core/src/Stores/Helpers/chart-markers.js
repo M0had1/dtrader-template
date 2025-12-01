@@ -429,7 +429,8 @@ export function calculateMarker(
 
     if (is_contract_finished) {
         if (!is_accumulator_contract) {
-            if (entry_spot) {
+            // Don't show entrySpot marker for digit contracts
+            if (entry_spot && !is_digit_contract) {
                 markers.push({
                     epoch: entry_spot_time,
                     quote: entry_spot,
@@ -489,12 +490,15 @@ export function calculateMarker(
         }
 
         if (entry_spot) {
-            markers.push({
-                epoch: entry_spot_time,
-                quote: entry_spot,
-                type: 'entrySpot',
-                direction: getMarkerDirection(contract_type),
-            });
+            // Don't show entrySpot marker for digit contracts
+            if (!is_digit_contract) {
+                markers.push({
+                    epoch: entry_spot_time,
+                    quote: entry_spot,
+                    type: 'entrySpot',
+                    direction: getMarkerDirection(contract_type),
+                });
+            }
             markers.push({
                 epoch: date_start,
                 quote: price,
