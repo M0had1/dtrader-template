@@ -51,15 +51,18 @@ export const getTradeParams = (symbol?: string, has_cancellation?: boolean) => (
         payout: true,
     },
     [TRADE_TYPES.MATCH_DIFF]: {
+        trade_type_tabs: true,
         last_digit: true,
         duration: true,
         stake: true,
     },
     [TRADE_TYPES.EVEN_ODD]: {
+        trade_type_tabs: true,
         duration: true,
         stake: true,
     },
     [TRADE_TYPES.OVER_UNDER]: {
+        trade_type_tabs: true,
         last_digit: true,
         duration: true,
         stake: true,
@@ -206,6 +209,42 @@ export const getTradeTypeTabsList = (contract_type = '') => {
             value: TRADE_TYPES.RISE_FALL,
             contract_type: CONTRACT_TYPES.PUT,
             is_displayed: is_rise_fall,
+        },
+        {
+            label: 'Matches',
+            value: TRADE_TYPES.MATCH_DIFF,
+            contract_type: CONTRACT_TYPES.MATCH_DIFF.MATCH,
+            is_displayed: contract_type === TRADE_TYPES.MATCH_DIFF,
+        },
+        {
+            label: 'Differs',
+            value: TRADE_TYPES.MATCH_DIFF,
+            contract_type: CONTRACT_TYPES.MATCH_DIFF.DIFF,
+            is_displayed: contract_type === TRADE_TYPES.MATCH_DIFF,
+        },
+        {
+            label: 'Even',
+            value: TRADE_TYPES.EVEN_ODD,
+            contract_type: CONTRACT_TYPES.EVEN_ODD.EVEN,
+            is_displayed: contract_type === TRADE_TYPES.EVEN_ODD,
+        },
+        {
+            label: 'Odd',
+            value: TRADE_TYPES.EVEN_ODD,
+            contract_type: CONTRACT_TYPES.EVEN_ODD.ODD,
+            is_displayed: contract_type === TRADE_TYPES.EVEN_ODD,
+        },
+        {
+            label: 'Over',
+            value: TRADE_TYPES.OVER_UNDER,
+            contract_type: CONTRACT_TYPES.OVER_UNDER.OVER,
+            is_displayed: contract_type === TRADE_TYPES.OVER_UNDER,
+        },
+        {
+            label: 'Under',
+            value: TRADE_TYPES.OVER_UNDER,
+            contract_type: CONTRACT_TYPES.OVER_UNDER.UNDER,
+            is_displayed: contract_type === TRADE_TYPES.OVER_UNDER,
         },
     ];
     return tab_list.filter(({ is_displayed }) => is_displayed);
