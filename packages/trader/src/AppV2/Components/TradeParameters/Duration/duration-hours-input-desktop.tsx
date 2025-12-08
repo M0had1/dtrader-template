@@ -159,44 +159,48 @@ const DurationHoursInputDesktop: React.FC<DurationHoursInputDesktopProps> = obse
     }, [state.hoursError, state.minutesError]);
 
     return (
-        <div className='duration-input-desktop'>
-            <div className='duration-input-desktop__wrapper'>
-                <div className='duration-input-desktop__fields'>
-                    <div className='duration-input-desktop__field-group'>
-                        <TextField
-                            variant='fill'
-                            label='Hours'
-                            value={state.hoursValue}
-                            onChange={handleHoursChange}
-                            placeholder='0'
-                            maxLength={2}
-                            status={state.hoursError ? 'error' : 'neutral'}
-                            message={state.hoursError}
-                        />
-                    </div>
-                    <div className='duration-input-desktop__field-group'>
-                        <TextField
-                            variant='fill'
-                            label='Minutes'
-                            value={state.minutesValue}
-                            onChange={handleMinutesChange}
-                            placeholder='0'
-                            maxLength={2}
-                            status={state.minutesError ? 'error' : 'neutral'}
-                            message={state.minutesError}
-                        />
-                    </div>
+        <div className='duration-input-desktop__wrapper'>
+            <div className='duration-input-desktop__fields duration-input-desktop__fields--hours-minutes'>
+                <div className='duration-input-desktop__field-group'>
+                    <TextField
+                        variant='fill'
+                        label='Hours'
+                        value={state.hoursValue}
+                        onChange={handleHoursChange}
+                        placeholder='0'
+                        maxLength={2}
+                        status={state.hoursError ? 'error' : 'neutral'}
+                        message={state.hoursError}
+                    />
                 </div>
-                {!state.hoursError && !state.minutesError && (
-                    <div className='duration-input-desktop__range'>
-                        <span className='duration-input-desktop__range-text'>{getRangeMessage()}</span>
-                    </div>
-                )}
-                <div className='duration-input-desktop__footer'>
-                    <Button size='lg' fullWidth onClick={handleSave} color='black-white'>
-                        <Localize i18n_default_text='Save' />
-                    </Button>
+                <div className='duration-input-desktop__field-group'>
+                    <TextField
+                        variant='fill'
+                        label='Minutes'
+                        value={state.minutesValue}
+                        onChange={handleMinutesChange}
+                        placeholder='0'
+                        maxLength={2}
+                        status={state.minutesError ? 'error' : 'neutral'}
+                        message={state.minutesError}
+                    />
                 </div>
+            </div>
+            {!state.hoursError && !state.minutesError && (
+                <div className='duration-input-desktop__range'>
+                    <span className='duration-input-desktop__range-text'>{getRangeMessage()}</span>
+                </div>
+            )}
+            <div className='duration-input-desktop__footer'>
+                <Button
+                    size='lg'
+                    fullWidth
+                    onClick={handleSave}
+                    color='black-white'
+                    disabled={state.hoursValue === '' && state.minutesValue === ''}
+                >
+                    <Localize i18n_default_text='Save' />
+                </Button>
             </div>
         </div>
     );
