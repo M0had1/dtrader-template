@@ -3,6 +3,7 @@ import clsx from 'clsx';
 
 import { LabelPairedPresentationScreenSmRegularIcon } from '@deriv/quill-icons';
 import { safeParse } from '@deriv/utils';
+import { useDevice } from '@deriv-com/ui';
 import { ActionSheet, Button, Chip, Text } from '@deriv-com/quill-ui';
 import { Localize, useTranslations } from '@deriv-com/translations';
 
@@ -47,6 +48,7 @@ export type TResultItem = {
 const TradeTypes = ({ contract_type, onTradeTypeSelect, trade_types, is_dark_mode_on }: TTradeTypesProps) => {
     const { localize } = useTranslations();
     const { isBridgeAvailable } = useMobileBridge();
+    const { isDesktop } = useDevice();
     const [is_open, setIsOpen] = React.useState<boolean>(false);
     const [is_editing, setIsEditing] = React.useState<boolean>(false);
     const trade_types_ref = React.useRef<HTMLDivElement>(null);
@@ -236,7 +238,8 @@ const TradeTypes = ({ contract_type, onTradeTypeSelect, trade_types, is_dark_mod
     };
 
     const trade_type_chips = getTradeTypeChips();
-    const should_show_view_all = trade_type_chips.length >= 2 || getItems(other_trade_types).length > 0;
+    const should_show_view_all =
+        (trade_type_chips.length >= 2 || getItems(other_trade_types).length > 0) && !is_bridge_available && !isDesktop;
     const show_trade_type_list_divider = !!other_trade_types[0]?.items?.length;
     const show_editing_divider = trade_types_array.length !== pinned_trade_types[0]?.items?.length;
     const trade_type_content_props = {
@@ -277,7 +280,7 @@ const TradeTypes = ({ contract_type, onTradeTypeSelect, trade_types, is_dark_mod
                     <Text size='sm'>{title}</Text>
                 </Chip.Selectable>
             ))}
-            {should_show_view_all && !is_bridge_available && (
+            {should_show_view_all && (
                 <Button
                     key='trade-types-all'
                     onClick={handleOpenActionSheet}
