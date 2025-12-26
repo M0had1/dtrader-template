@@ -53,23 +53,28 @@ const AccountSwitcherIntroTooltip = ({
             // Check if user has completed onboarding guides (existing users only)
             const guide_dtrader_v2_raw = localStorage.getItem('guide_dtrader_v2');
 
-            // If guide_dtrader_v2 exists, check if all guides are completed
-            if (guide_dtrader_v2_raw) {
-                try {
-                    const guide_dtrader_v2 = JSON.parse(guide_dtrader_v2_raw);
-                    const all_guides_completed = Object.values(guide_dtrader_v2).every(value => value === true);
-
-                    // Don't show for new users who haven't completed welcome guide
-                    if (!all_guides_completed) {
-                        return;
-                    }
-                } catch {
-                    // If parsing fails, don't show the tooltip
-                    return;
-                }
+            // If guide_dtrader_v2 doesn't exist, user hasn't initialized guides yet (new user or race condition on first load)
+            // Don't show tooltip to avoid showing it before/during guide initialization
+            if (!guide_dtrader_v2_raw) {
+                return;
             }
 
-            // Show tooltip after delay for existing users
+            // If guide_dtrader_v2 exists, check if ALL guides are completed
+            try {
+                const guide_dtrader_v2 = JSON.parse(guide_dtrader_v2_raw);
+                const all_guides_completed = Object.values(guide_dtrader_v2).every(value => value === true);
+
+                // Only show tooltip if ALL guides have been completed
+                // This prevents tooltip from showing while guides are still active
+                if (!all_guides_completed) {
+                    return;
+                }
+            } catch {
+                // If parsing fails, don't show the tooltip
+                return;
+            }
+
+            // Show tooltip after delay for existing users who completed ALL guides
             timer = setTimeout(() => {
                 setIsTooltipOpen(true);
                 onAccountSwitcherHighlight?.(true);
