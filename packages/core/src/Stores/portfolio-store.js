@@ -64,6 +64,10 @@ export default class PortfolioStore extends BaseStore {
         // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
         super(root_store);
 
+        // Initialize disposers for cleanup
+        this.loginReactionDisposer = null;
+        this.reconnectHandler = null;
+
         makeObservable(this, {
             positions: observable.shallow,
             all_positions: observable.shallow,
@@ -550,8 +554,9 @@ export default class PortfolioStore extends BaseStore {
             // Check current state first to handle both initial connection and reconnection
             if (this.root_store.client.is_logged_in) {
                 this.initializePortfolio();
-            } else {
-                reaction(
+            } else if (!this.loginReactionDisposer) {
+                // Only create reaction if one doesn't exist
+                this.loginReactionDisposer = reaction(
                     () => this.root_store.client.is_logged_in,
                     () => {
                         if (this.root_store.client.is_logged_in) {
@@ -565,10 +570,12 @@ export default class PortfolioStore extends BaseStore {
         // Add reconnection handler - onReconnect is only called when account_id exists
         // so we don't need to check is_logged_in here
         // Store the handler so we can remove it later
-        this.reconnectHandler = () => {
-            this.initializePortfolio();
-        };
-        WS.setOnReconnect(this.reconnectHandler);
+        if (!this.reconnectHandler) {
+            this.reconnectHandler = () => {
+                this.initializePortfolio();
+            };
+            WS.setOnReconnect(this.reconnectHandler);
+        }
     }
 
     onUnmount() {
@@ -577,8 +584,17 @@ export default class PortfolioStore extends BaseStore {
             this.clearTable();
             this.disposeLogout();
         }
+
+        // Dispose MobX reaction to prevent memory leak
+        if (this.loginReactionDisposer) {
+            this.loginReactionDisposer();
+            this.loginReactionDisposer = null;
+        }
+
+        // Remove reconnection handler
         if (this.reconnectHandler) {
             WS.removeOnReconnect(this.reconnectHandler);
+            this.reconnectHandler = null;
         }
     }
 

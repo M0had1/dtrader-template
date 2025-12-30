@@ -28,6 +28,10 @@ export default class ProfitTableStore extends BaseStore {
         // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
         super({ root_store });
 
+        // Initialize disposers for cleanup
+        this.loginReactionDisposer = null;
+        this.reconnectHandler = null;
+
         makeObservable(this, {
             data: observable,
             date_from: observable,
@@ -130,8 +134,9 @@ export default class ProfitTableStore extends BaseStore {
         // Check current state first to handle both initial connection and reconnection
         if (this.root_store.client.is_logged_in) {
             this.fetchNextBatch(shouldFilterContractTypes, true);
-        } else {
-            reaction(
+        } else if (!this.loginReactionDisposer) {
+            // Only create reaction if one doesn't exist
+            this.loginReactionDisposer = reaction(
                 () => this.root_store.client.is_logged_in,
                 () => {
                     if (this.root_store.client.is_logged_in) {
@@ -143,19 +148,30 @@ export default class ProfitTableStore extends BaseStore {
 
         // Add reconnection handler - onReconnect is only called when account_id exists
         // Store the handler so we can remove it later
-        this.reconnectHandler = () => {
-            this.clearTable();
-            this.fetchNextBatch(shouldFilterContractTypes, true);
-        };
-        WS.setOnReconnect(this.reconnectHandler);
+        if (!this.reconnectHandler) {
+            this.reconnectHandler = () => {
+                this.clearTable();
+                this.fetchNextBatch(shouldFilterContractTypes, true);
+            };
+            WS.setOnReconnect(this.reconnectHandler);
+        }
     }
 
     /* DO NOT call clearDateFilter() upon unmounting the component, date filters should stay
     as we change tab or click on any contract for later references as discussed with UI/UX and QA */
     onUnmount() {
         WS.forgetAll('proposal');
+
+        // Dispose MobX reaction to prevent memory leak
+        if (this.loginReactionDisposer) {
+            this.loginReactionDisposer();
+            this.loginReactionDisposer = null;
+        }
+
+        // Remove reconnection handler
         if (this.reconnectHandler) {
             WS.removeOnReconnect(this.reconnectHandler);
+            this.reconnectHandler = null;
         }
     }
 
