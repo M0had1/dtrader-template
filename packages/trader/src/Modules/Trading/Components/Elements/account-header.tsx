@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
 
 import { useDerivativesAccount } from '@deriv/api';
-import { Button, Text, Skeleton } from '@deriv/components';
+import { Button, Skeleton, Text } from '@deriv/components';
 import AccountSwitcher from '@deriv/core/src/App/Components/Layout/Header/account-switcher';
 import AccountSwitcherIntroTooltip from '@deriv/core/src/App/Components/Layout/Header/AccountSwitcherIntroTooltip';
 import { LegacyChevronDown1pxIcon } from '@deriv/quill-icons';
@@ -180,11 +180,15 @@ const AccountHeader = observer(
         );
 
         if (!is_logged_in) {
+            const handleLoginClick = () => {
+                redirectToLogin(common.current_language);
+            };
+
             return (
                 <div className='account-header'>
                     <Button
                         className='account-header__login'
-                        onClick={redirectToLogin}
+                        onClick={handleLoginClick}
                         aria-label={localize('Log in')}
                         type='button'
                     >

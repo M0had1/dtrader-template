@@ -68,14 +68,14 @@ const ServiceErrorSheet = observer(() => {
                     content: <Localize i18n_default_text='Create free account' />,
                     onAction: () => {
                         resetServicesError();
-                        redirectToSignUp();
+                        redirectToSignUp(current_language);
                     },
                 },
                 secondaryAction: {
                     content: <Localize i18n_default_text='Login' />,
                     onAction: () => {
                         resetServicesError();
-                        redirectToLogin();
+                        redirectToLogin(current_language);
                     },
                 },
             };

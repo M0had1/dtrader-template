@@ -18,6 +18,7 @@ const AppContents = observer(({ children }) => {
     const [is_gtm_tracking, setIsGtmTracking] = React.useState(false);
     const {
         client,
+        common,
         gtm: { pushDataLayer },
         ui,
     } = useStore();
@@ -49,7 +50,7 @@ const AppContents = observer(({ children }) => {
                 setShouldRedirectToLogin(false);
             } else {
                 setShouldRedirectToLogin(false);
-                redirectToLogin();
+                redirectToLogin(common.current_language);
             }
         }
     }, [should_redirect_user_to_login, is_logged_in, setShouldRedirectToLogin, client.is_client_store_initialized]);
