@@ -210,8 +210,17 @@ export default class ContractTradeStore extends BaseStore {
             should_update_contract_barriers,
             proposal_prev_spot_time: current_spot_time,
         };
+        // Check if we have existing barrier data that should be preserved
+        const has_existing_barriers = should_update_contract_barriers
+            ? this.accumulator_contract_barriers_data.accumulators_high_barrier
+            : this.accumulator_barriers_data.accumulators_high_barrier;
+
+        // Skip update for duplicate data, or when waiting for tick synchronization
+        // BUT always accept new barriers when there are no existing barriers
+        // (e.g., after contract is closed and barriers were cleared)
         if (
-            (this.accumulator_barriers_data.current_spot_time &&
+            (has_existing_barriers &&
+                this.accumulator_barriers_data.current_spot_time &&
                 this.accumulator_barriers_data.current_spot_time !== current_spot_time &&
                 !this.accumulator_barriers_data.accumulators_high_barrier) ||
             Object.keys(delayed_barriers_data).every(key =>
@@ -376,20 +385,30 @@ export default class ContractTradeStore extends BaseStore {
         const should_show_poc_barriers =
             (entry_time && entry_time !== current_spot_time) || (exit_time && current_spot_time <= exit_time);
 
+        // Check if there are active accumulator positions - don't trust stale last_contract data
+        const has_active_accu_positions = this.root_store.portfolio?.active_positions?.some(pos =>
+            isAccumulatorContract(pos.contract_info?.contract_type)
+        );
+        // Only consider contract as open if there are actually active positions AND the contract info shows open
+        const is_open_for_barriers =
+            has_active_accu_positions && isAccumulatorContractOpen(this.last_contract.contract_info);
+        const use_contract_barriers =
+            is_open_for_barriers &&
+            should_show_poc_barriers &&
+            this.accumulator_contract_barriers_data?.accumulators_high_barrier;
+
+        const barriers_source = use_contract_barriers
+            ? this.accumulator_contract_barriers_data
+            : this.accumulator_barriers_data;
+
         const { accumulators_high_barrier, accumulators_low_barrier, barrier_spot_distance, proposal_prev_spot_time } =
-            (isAccumulatorContractOpen(this.last_contract.contract_info) &&
-                should_show_poc_barriers &&
-                this.accumulator_contract_barriers_data?.accumulators_high_barrier &&
-                this.accumulator_contract_barriers_data) ||
-            this.accumulator_barriers_data ||
-            {};
+            barriers_source || {};
 
         if (trade_type === TRADE_TYPES.ACCUMULATOR && proposal_prev_spot_time && accumulators_high_barrier) {
             const is_open = isAccumulatorContractOpen(this.last_contract.contract_info);
-            const has_active_positions = this.root_store.portfolio?.active_positions?.length > 0;
 
-            // Force is_accumulator_trade_without_contract to true if there are no active positions
-            const force_without_contract = !has_active_positions;
+            // Force is_accumulator_trade_without_contract to true if there are no active ACCUMULATOR positions
+            const force_without_contract = !has_active_accu_positions;
 
             markers.push(
                 getAccumulatorMarkers({
@@ -491,9 +510,6 @@ export default class ContractTradeStore extends BaseStore {
                 this.last_contract_override = null;
             });
         }
-
-        // Reset the accumulator marker data as well
-        this.clearAccumulatorBarriersData(false, true);
     }
 
     // Called from portfolio
