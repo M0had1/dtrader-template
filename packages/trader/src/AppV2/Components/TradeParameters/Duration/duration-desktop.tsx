@@ -12,12 +12,15 @@ import TradeParameterPopover, { useTradeParameterPopover } from '../Shared/Trade
 import DurationEndTimeDesktop from './duration-end-time-desktop';
 import DurationHoursInputDesktop from './duration-hours-input-desktop';
 import DurationInputDesktop from './duration-input-desktop';
+import DurationTicksInputDesktop from './duration-ticks-input-desktop';
 import DurationUnitSelector from './duration-unit-selector';
 
-const DURATION_TICK_VALUES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const DURATION_SECONDS_VALUES = [15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
-const DURATION_MINUTES_VALUES = [1, 2, 3, 4, 5, 10, 15, 30, 45, 60];
-const DURATION_HOURS_VALUES = [1, 2, 3, 4, 6, 8, 10, 12, 18, 24];
+const DURATION_TICK_VALUES = [1, 2, 3, 4, 5, 6, 7, 8];
+const DURATION_SECONDS_VALUES = [1, 20, 25, 30, 40, 50];
+const DURATION_MINUTES_VALUES = [1, 2, 3, 4, 5, 10];
+const DURATION_HOURS_VALUES = [1, 2, 3, 4, 6, 8];
+const DURATION_END_TIME_VALUES = ['07:30', '07:35', '07:40', '07:45', '07:50', '07:55'];
+const DURATION_END_DATE_VALUES = [1, 2, 3, 5, 7, 10]; // Days from now
 
 interface DurationDesktopProps {
     is_minimized?: boolean;
@@ -29,24 +32,32 @@ const DurationPopoverContent: React.FC<{
     selectedDuration: number;
     onDurationSelect: (value: number) => void;
     onHourSelect: (hours: number) => void;
+    onEndTimeSelect: (time: string) => void;
+    onEndDateSelect: (days: number) => void;
     onUnitSelect: (unit: string) => void;
     onTabChange: (tab: 'chips' | 'input') => void;
     formatTickValue: (value: number) => string;
     formatSecondsValue: (value: number) => string;
     formatMinutesValue: (value: number) => string;
     formatHoursValue: (value: number) => string;
+    formatEndTimeValue: (value: string) => string;
+    formatEndDateValue: (value: number) => string;
 }> = ({
     selectedUnit,
     activeTab,
     selectedDuration,
     onDurationSelect,
     onHourSelect,
+    onEndTimeSelect,
+    onEndDateSelect,
     onUnitSelect,
     onTabChange,
     formatTickValue,
     formatSecondsValue,
     formatMinutesValue,
     formatHoursValue,
+    formatEndTimeValue,
+    formatEndDateValue,
 }) => {
     const { closePopover } = useTradeParameterPopover();
 
@@ -66,26 +77,52 @@ const DurationPopoverContent: React.FC<{
         [onHourSelect, closePopover]
     );
 
+    const handleEndTimeSelectAndClose = useCallback(
+        (time: string) => {
+            onEndTimeSelect(time);
+            closePopover();
+        },
+        [onEndTimeSelect, closePopover]
+    );
+
+    const handleEndDateSelectAndClose = useCallback(
+        (days: number) => {
+            onEndDateSelect(days);
+            closePopover();
+        },
+        [onEndDateSelect, closePopover]
+    );
+
     return (
         <div className='duration-popover__layout'>
             <div className='duration-popover__sidebar'>
                 <DurationUnitSelector selectedUnit={selectedUnit} onSelectUnit={onUnitSelect} />
             </div>
             <div className='duration-popover__main'>
-                {(selectedUnit === 's' || selectedUnit === 'm' || selectedUnit === 'h') && (
+                {(selectedUnit === 't' ||
+                    selectedUnit === 's' ||
+                    selectedUnit === 'm' ||
+                    selectedUnit === 'h' ||
+                    selectedUnit === 'end_time' ||
+                    selectedUnit === 'end_date') && (
                     <div className='duration-popover__header'>
                         <TabSelector activeTab={activeTab} onTabChange={onTabChange} />
                     </div>
                 )}
                 <div className='duration-popover__content'>
                     {selectedUnit === 't' ? (
-                        <ValueChips
-                            values={DURATION_TICK_VALUES}
-                            selectedValue={selectedDuration}
-                            onSelect={handleDurationSelectAndClose}
-                            formatValue={formatTickValue}
-                        />
-                    ) : selectedUnit === 's' ? (
+                        activeTab === 'chips' ? (
+                            <ValueChips
+                                values={DURATION_TICK_VALUES}
+                                selectedValue={selectedDuration}
+                                onSelect={handleDurationSelectAndClose}
+                                formatValue={formatTickValue}
+                            />
+                        ) : (
+                            <DurationTicksInputDesktop onClose={closePopover} />
+                        )
+                    ) : // [/AI]
+                    selectedUnit === 's' ? (
                         activeTab === 'chips' ? (
                             <ValueChips
                                 values={DURATION_SECONDS_VALUES}
@@ -119,7 +156,32 @@ const DurationPopoverContent: React.FC<{
                             <DurationHoursInputDesktop onClose={closePopover} />
                         )
                     ) : selectedUnit === 'end_time' ? (
-                        <DurationEndTimeDesktop onClose={closePopover} />
+                        // [AI]
+                        activeTab === 'chips' ? (
+                            <ValueChips
+                                values={[0, 1, 2, 3, 4, 5]}
+                                selectedValue={0}
+                                onSelect={index => handleEndTimeSelectAndClose(DURATION_END_TIME_VALUES[index])}
+                                formatValue={index => DURATION_END_TIME_VALUES[index]}
+                            />
+                        ) : (
+                            <DurationEndTimeDesktop onClose={closePopover} />
+                        )
+                    ) : selectedUnit === 'end_date' ? (
+                        activeTab === 'chips' ? (
+                            <ValueChips
+                                values={DURATION_END_DATE_VALUES}
+                                selectedValue={selectedDuration}
+                                onSelect={handleEndDateSelectAndClose}
+                                formatValue={formatEndDateValue}
+                            />
+                        ) : (
+                            <div className='duration-popover__coming-soon'>
+                                <Text size='md' color='quill-typography-default'>
+                                    <Localize i18n_default_text='End date manual input coming soon' />
+                                </Text>
+                            </div>
+                        )
                     ) : (
                         <div className='duration-popover__coming-soon'>
                             <Text size='md' color='quill-typography-default'>
@@ -223,6 +285,41 @@ const DurationDesktop: React.FC<DurationDesktopProps> = observer(({ is_minimized
         });
     }, []);
 
+    const formatEndTimeValue = useCallback((value: string) => {
+        return value; // Time is already formatted as HH:MM
+    }, []);
+
+    const formatEndDateValue = useCallback((value: number) => {
+        const date = new Date();
+        date.setDate(date.getDate() + value);
+        const month = date.toLocaleDateString('en-US', { month: 'short' });
+        const day = date.getDate();
+        return `${day} ${month}`;
+    }, []);
+
+    const handleEndTimeSelect = useCallback(
+        (time: string) => {
+            onChangeMultiple({
+                expiry_type: 'endtime',
+                expiry_time: time,
+            });
+        },
+        [onChangeMultiple]
+    );
+
+    const handleEndDateSelect = useCallback(
+        (days: number) => {
+            const date = new Date();
+            date.setDate(date.getDate() + days);
+            const formattedDate = date.toISOString().split('T')[0];
+            onChangeMultiple({
+                expiry_type: 'endtime',
+                expiry_date: formattedDate,
+            });
+        },
+        [onChangeMultiple]
+    );
+
     const getDisplayValue = useCallback(() => {
         if (duration_unit === 't') {
             return formatTickValue(duration);
@@ -259,7 +356,7 @@ const DurationDesktop: React.FC<DurationDesktopProps> = observer(({ is_minimized
 
     return (
         <TradeParameterPopover
-            popoverWidth={444}
+            popoverWidth={360}
             label={<Localize i18n_default_text='Duration' key={`duration${is_minimized ? '-minimized' : ''}`} />}
             is_minimized={is_minimized}
             disabled={is_market_closed}
@@ -274,12 +371,16 @@ const DurationDesktop: React.FC<DurationDesktopProps> = observer(({ is_minimized
                 selectedDuration={selectedDuration}
                 onDurationSelect={handleDurationSelect}
                 onHourSelect={handleHourSelect}
+                onEndTimeSelect={handleEndTimeSelect}
+                onEndDateSelect={handleEndDateSelect}
                 onUnitSelect={handleUnitSelect}
                 onTabChange={handleTabChange}
                 formatTickValue={formatTickValue}
                 formatSecondsValue={formatSecondsValue}
                 formatMinutesValue={formatMinutesValue}
                 formatHoursValue={formatHoursValue}
+                formatEndTimeValue={formatEndTimeValue}
+                formatEndDateValue={formatEndDateValue}
             />
         </TradeParameterPopover>
     );
