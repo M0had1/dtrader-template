@@ -32,6 +32,7 @@ const DurationPopoverContent: React.FC<{
     selectedUnit: string;
     activeTab: 'chips' | 'input';
     selectedDuration: number;
+    availableUnits: string[];
     onDurationSelect: (value: number) => void;
     onHourSelect: (hours: number) => void;
     onEndTimeSelect: (time: string) => void;
@@ -48,6 +49,7 @@ const DurationPopoverContent: React.FC<{
     selectedUnit,
     activeTab,
     selectedDuration,
+    availableUnits,
     onDurationSelect,
     onHourSelect,
     onEndTimeSelect,
@@ -171,7 +173,11 @@ const DurationPopoverContent: React.FC<{
     return (
         <div className='duration-popover__layout'>
             <div className='duration-popover__sidebar'>
-                <DurationUnitSelector selectedUnit={selectedUnit} onSelectUnit={onUnitSelect} />
+                <DurationUnitSelector
+                    selectedUnit={selectedUnit}
+                    onSelectUnit={onUnitSelect}
+                    availableUnits={availableUnits}
+                />
             </div>
             <div className='duration-popover__main'>
                 {config && (
@@ -203,7 +209,24 @@ const DurationPopoverContent: React.FC<{
 };
 
 const DurationDesktop: React.FC<DurationDesktopProps> = observer(({ is_minimized }) => {
-    const { duration, duration_unit, onChangeMultiple, is_market_closed } = useTraderStore();
+    const { duration, duration_unit, duration_units_list, onChangeMultiple, is_market_closed } = useTraderStore();
+
+    const availableUnits = React.useMemo(() => {
+        const units = duration_units_list.map(unit => unit.value);
+        // Add end_time and end_date for contracts that support them
+        // (they're expiry types, not duration units, so they're not in duration_units_list)
+        // Only add them if the contract has more than just ticks (digit contracts only have ticks)
+        const hasOnlyTicks = units.length === 1 && units[0] === 't';
+        if (!hasOnlyTicks) {
+            if (!units.includes('end_time')) {
+                units.push('end_time');
+            }
+            if (!units.includes('end_date')) {
+                units.push('end_date');
+            }
+        }
+        return units;
+    }, [duration_units_list]);
 
     const [selectedUnit, setSelectedUnit] = useState('t'); // Default to Ticks
     const [selectedDuration, setSelectedDuration] = useState(duration);
@@ -376,6 +399,7 @@ const DurationDesktop: React.FC<DurationDesktopProps> = observer(({ is_minimized
                 selectedUnit={selectedUnit}
                 activeTab={activeTab}
                 selectedDuration={selectedDuration}
+                availableUnits={availableUnits}
                 onDurationSelect={handleDurationSelect}
                 onHourSelect={handleHourSelect}
                 onEndTimeSelect={handleEndTimeSelect}
