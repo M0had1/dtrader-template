@@ -33,13 +33,15 @@ const GrowthRateDesktop = observer(({ is_minimized }: TTradeParametersProps) => 
 
     return (
         <TradeParameterPopover
-            // [AI]
             popoverWidth={154}
             label={<Localize i18n_default_text='Growth rate' key={`growth-rate${is_minimized ? '-minimized' : ''}`} />}
             value={`${getGrowthRatePercentage(growth_rate)}%`}
             is_minimized={is_minimized}
             disabled={has_open_accu_contract || is_market_closed}
             popover_classname='selection-list-popover'
+            description={
+                <Localize i18n_default_text='The growth rate determines the rate at which your stake will grow with each successful tick.' />
+            }
         >
             <SelectionListPopover
                 options={growth_rate_options}

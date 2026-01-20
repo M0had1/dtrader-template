@@ -35,13 +35,15 @@ const MultiplierDesktop = observer(({ is_minimized }: TTradeParametersProps) => 
 
     return (
         <TradeParameterPopover
-            // [AI]
             popoverWidth={154}
             label={<Localize i18n_default_text='Multiplier' key={`multiplier${is_minimized ? '-minimized' : ''}`} />}
             value={`x${multiplier}`}
             is_minimized={is_minimized}
             disabled={is_market_closed}
             popover_classname='selection-list-popover'
+            description={
+                <Localize i18n_default_text='Multipliers amplify your potential profit if the market moves in your favour, with losses limited to your initial capital.' />
+            }
         >
             <SelectionListPopover
                 options={multiplier_options}

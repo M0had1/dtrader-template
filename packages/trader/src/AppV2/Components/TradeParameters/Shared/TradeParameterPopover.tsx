@@ -1,9 +1,12 @@
 import React from 'react';
 import clsx from 'clsx';
 
+import { LabelPairedCircleInfoMdRegularIcon } from '@deriv/quill-icons';
 import { TextField } from '@deriv-com/quill-ui';
 
 import { InputPopover } from 'AppV2/Components/InputPopover';
+
+import ParameterTooltip from './ParameterTooltip';
 
 type TTradeParameterPopoverProps = {
     label: React.ReactNode;
@@ -17,6 +20,7 @@ type TTradeParameterPopoverProps = {
     header?: React.ReactNode;
     onOpen?: () => void;
     onClose?: () => void;
+    description?: React.ReactNode;
 };
 
 type TTradeParameterPopoverContext = {
@@ -45,6 +49,7 @@ const TradeParameterPopover = ({
     header,
     onOpen: onOpenCallback,
     onClose: onCloseCallback,
+    description,
 }: TTradeParameterPopoverProps) => {
     const [is_open, setIsOpen] = React.useState(false);
     const field_ref = React.useRef<HTMLDivElement>(null);
@@ -67,7 +72,7 @@ const TradeParameterPopover = ({
 
     return (
         <React.Fragment>
-            <div ref={field_ref}>
+            <div ref={field_ref} className={clsx(description && 'trade-params__field-with-info')}>
                 <TextField
                     disabled={disabled}
                     variant='fill'
@@ -79,6 +84,13 @@ const TradeParameterPopover = ({
                     className={clsx('trade-params__option', is_minimized && 'trade-params__option--minimized')}
                     status={has_error ? 'error' : 'neutral'}
                 />
+                {description && (
+                    <div className='trade-params__info-icon-wrapper'>
+                        <ParameterTooltip message={description} fieldRef={field_ref}>
+                            <LabelPairedCircleInfoMdRegularIcon className='trade-params__info-icon' />
+                        </ParameterTooltip>
+                    </div>
+                )}
             </div>
             <InputPopover
                 isOpen={is_open}

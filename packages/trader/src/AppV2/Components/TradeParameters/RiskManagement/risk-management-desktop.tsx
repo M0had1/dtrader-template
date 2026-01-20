@@ -10,6 +10,7 @@ import { useTraderStore } from 'Stores/useTraderStores';
 import TradeParameterPopover, { useTradeParameterPopover } from '../Shared/TradeParameterPopover';
 
 import DealCancellationDesktop from './deal-cancellation-desktop';
+import RiskManagementContent from './risk-management-content';
 import RiskManagementUnitSelector from './risk-management-unit-selector';
 import TakeProfitStopLossDesktop from './take-profit-stop-loss-desktop';
 
@@ -109,6 +110,7 @@ const RiskManagementDesktop: React.FC<RiskManagementDesktopProps> = observer(({ 
             value={getRiskManagementText()}
             onOpen={handleOpenPopover}
             onClose={handleClosePopover}
+            description={<RiskManagementContent should_show_deal_cancellation={should_show_deal_cancellation} />}
         >
             <RiskManagementPopoverContent
                 selectedUnit={selectedUnit}

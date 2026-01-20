@@ -46,6 +46,9 @@ const PayoutPerPointDesktop = observer(({ is_minimized }: TTradeParametersProps)
             is_minimized={is_minimized}
             disabled={is_market_closed}
             popover_classname='selection-list-popover'
+            description={
+                <Localize i18n_default_text='The amount you choose to receive at expiry for every point of change between the final price and the barrier.' />
+            }
         >
             <SelectionListPopover
                 options={payout_per_point_list}

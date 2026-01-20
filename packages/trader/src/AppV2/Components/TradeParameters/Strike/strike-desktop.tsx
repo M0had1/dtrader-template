@@ -27,13 +27,15 @@ const StrikeDesktop = observer(({ is_minimized }: TTradeParametersProps) => {
 
     return (
         <TradeParameterPopover
-            // [AI]
             popoverWidth={154}
             label={<Localize i18n_default_text='Strike price' key={`strike${is_minimized ? '-minimized' : ''}`} />}
             value={barrier_1}
             is_minimized={is_minimized}
             disabled={is_market_closed}
             popover_classname='selection-list-popover'
+            description={
+                <Localize i18n_default_text='The strike price is the price at which the contract is settled at expiry.' />
+            }
         >
             <SelectionListPopover
                 options={strike_options}
