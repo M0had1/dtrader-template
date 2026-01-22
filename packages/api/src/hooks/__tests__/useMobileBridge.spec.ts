@@ -83,7 +83,7 @@ const TestComponent = ({ onResult }: { onResult: (result: TestResult) => void })
                 'data-testid': 'test-send-with-fallback',
                 onClick: async () => {
                     const mockFallback = jest.fn();
-                    const result = await hookResult.sendBridgeEvent('trading:back', undefined, mockFallback);
+                    const result = await hookResult.sendBridgeEvent('trading:back', mockFallback);
                     onResult({ sendResult: result, fallbackCalled: mockFallback.mock.calls.length });
                 },
             },
@@ -117,11 +117,25 @@ const TestComponent = ({ onResult }: { onResult: (result: TestResult) => void })
                 'data-testid': 'test-send-transfer-with-fallback',
                 onClick: async () => {
                     const mockFallback = jest.fn();
-                    const result = await hookResult.sendBridgeEvent('trading:transfer', undefined, mockFallback);
+                    const result = await hookResult.sendBridgeEvent('trading:transfer', mockFallback);
                     onResult({ sendResult: result, fallbackCalled: mockFallback.mock.calls.length });
                 },
             },
             'Test Send Transfer With Fallback'
+        ),
+        React.createElement(
+            'button',
+            {
+                'data-testid': 'test-send-config-with-data',
+                onClick: async () => {
+                    const result = await hookResult.sendBridgeEvent('trading:config', {
+                        lang: 'EN',
+                        theme: 'dark',
+                    });
+                    onResult({ sendResult: result });
+                },
+            },
+            'Test Send Config With Data'
         )
     );
 };
@@ -435,6 +449,31 @@ describe('useMobileBridge', () => {
             expect(testResult.fallbackCalled).toBe(1);
             expect(mockPostMessage).toHaveBeenCalled();
             expect(mockConsoleError).toHaveBeenCalledWith('Failed to send bridge message:', expect.any(Error));
+        });
+
+        it('should send trading:config event with data when bridge is available', async () => {
+            // Mock query parameter
+            delete (window as any).location;
+            (window as any).location = { search: '?is_mobile_app=true' };
+
+            const mockPostMessage = jest.fn();
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (window as any).DerivAppChannel = {
+                postMessage: mockPostMessage,
+            };
+
+            render(React.createElement(TestComponent, { onResult }));
+
+            const button = screen.getByTestId('test-send-config-with-data');
+            await userEvent.click(button);
+
+            expect(testResult.sendResult).toBe(true);
+            expect(mockPostMessage).toHaveBeenCalledWith(
+                JSON.stringify({
+                    event: 'trading:config',
+                    data: { lang: 'EN', theme: 'dark' },
+                })
+            );
         });
     });
 });

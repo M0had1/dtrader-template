@@ -83,7 +83,7 @@ const Sidebar = observer(() => {
 
     const handleHomeClick = () => {
         closeSidebarFlyout();
-        sendBridgeEvent('trading:home', undefined, () => {
+        sendBridgeEvent('trading:home', () => {
             const brandUrl = getBrandUrl();
             const lang_param = current_language ? `&lang=${current_language}` : '';
             const currency = client.currency || '';

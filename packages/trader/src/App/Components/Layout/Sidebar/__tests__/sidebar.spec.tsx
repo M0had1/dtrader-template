@@ -17,7 +17,11 @@ jest.mock('@deriv/shared', () => ({
 jest.mock('@deriv/api', () => ({
     ...jest.requireActual('@deriv/api'),
     useMobileBridge: jest.fn(() => ({
-        sendBridgeEvent: jest.fn((_event, _data, callback) => callback && callback()),
+        sendBridgeEvent: jest.fn((_event, dataOrFallback, callback) => {
+            // Handle overloaded signature - detect if second param is function or data
+            const actualFallback = typeof dataOrFallback === 'function' ? dataOrFallback : callback;
+            return actualFallback && actualFallback();
+        }),
     })),
 }));
 

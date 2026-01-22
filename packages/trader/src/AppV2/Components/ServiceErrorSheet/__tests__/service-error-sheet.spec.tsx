@@ -24,9 +24,11 @@ jest.mock('@deriv/shared', () => ({
 }));
 
 // Mock useMobileBridge hook
-const mockSendBridgeEvent = jest.fn(async (_event, _data, fallback) => {
+const mockSendBridgeEvent = jest.fn(async (_event, dataOrFallback, fallback) => {
+    // Handle overloaded signature - detect if second param is function or data
+    const actualFallback = typeof dataOrFallback === 'function' ? dataOrFallback : fallback;
     // Execute fallback to simulate browser behavior
-    if (fallback) await fallback();
+    if (actualFallback) await actualFallback();
     return true;
 });
 
@@ -140,7 +142,7 @@ describe('ServiceErrorSheet', () => {
             const depositButton = screen.getByText(/transfer now/i);
             await userEvent.click(depositButton);
 
-            expect(mockSendBridgeEvent).toHaveBeenCalledWith('trading:transfer', undefined, expect.any(Function));
+            expect(mockSendBridgeEvent).toHaveBeenCalledWith('trading:transfer', expect.any(Function));
         });
 
         it('should not call sendBridgeEvent when "OK" button is clicked for virtual accounts', async () => {

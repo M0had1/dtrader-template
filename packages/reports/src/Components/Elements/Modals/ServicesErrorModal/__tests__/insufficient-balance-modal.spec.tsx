@@ -16,9 +16,11 @@ jest.mock('@deriv/shared', () => ({
 }));
 
 // Mock useMobileBridge hook
-const mockSendBridgeEvent = jest.fn(async (_event, fallback) => {
+const mockSendBridgeEvent = jest.fn(async (_event, dataOrFallback, fallback) => {
+    // Handle overloaded signature - detect if second param is function or data
+    const actualFallback = typeof dataOrFallback === 'function' ? dataOrFallback : fallback;
     // Execute fallback to simulate browser behavior
-    if (fallback) await fallback();
+    if (actualFallback) await actualFallback();
     return true;
 });
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Prompt, useLocation, Redirect } from 'react-router-dom';
-import { SmartFallbackLoader } from '@deriv/components';
+import { useDevice } from '@deriv-com/ui';
+import { Loading, SmartFallbackLoader } from '@deriv/components';
 import { routes } from '@deriv/shared';
 import getRoutesConfig from 'App/Constants/routes-config';
 import RouteWithSubRoutes from './route-with-sub-routes.jsx';
@@ -39,6 +40,7 @@ const BinaryRoutes = observer(props => {
     const { promptFn, prompt_when } = ui;
     const { pushDataLayer } = gtm;
     const location = useLocation();
+    const { isMobile } = useDevice();
 
     React.useEffect(() => {
         pushDataLayer({ event: 'page_load' });
@@ -46,7 +48,7 @@ const BinaryRoutes = observer(props => {
     }, [location]);
 
     return (
-        <React.Suspense fallback={<SmartFallbackLoader />}>
+        <React.Suspense fallback={isMobile ? <SmartFallbackLoader /> : <Loading />}>
             <Prompt when={prompt_when} message={promptFn} />
             <RemovedRoutesRedirect />
             <Switch>

@@ -13,7 +13,7 @@ const AccountSelector = observer(() => {
 
     const handleLogout = () => {
         closeSidebarFlyout();
-        sendBridgeEvent('trading:back', undefined, () => {
+        sendBridgeEvent('trading:back', () => {
             logout();
         });
     };
