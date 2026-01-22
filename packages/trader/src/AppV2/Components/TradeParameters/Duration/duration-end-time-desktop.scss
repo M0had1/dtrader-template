@@ -1,0 +1,16 @@
+.duration-end-time-desktop {
+    &__popover {
+        padding: 0 !important;
+
+        .quill-date-picker {
+            padding: 0;
+        }
+    }
+
+    &__message {
+        font-size: 1.2rem;
+        color: var(--component-textIcon-normal-subtle);
+        line-height: 2rem;
+        padding: 0 0.8rem;
+    }
+}

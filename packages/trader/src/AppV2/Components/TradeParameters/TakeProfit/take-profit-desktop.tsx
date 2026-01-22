@@ -37,6 +37,9 @@ const TakeProfitDesktop = observer(({ is_minimized }: TTradeParametersProps) => 
             popover_classname='take-profit-popover'
             onOpen={() => setIsOpen(true)}
             onClose={onClose}
+            description={
+                <Localize i18n_default_text='When your profit reaches or exceeds this amount, your trade will be closed automatically.' />
+            }
         >
             <TakeProfitPopoverContent is_open={is_open} />
         </TradeParameterPopover>

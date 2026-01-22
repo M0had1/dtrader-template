@@ -10,12 +10,9 @@ jest.mock('@lottiefiles/dotlottie-react', () => ({
 
 describe('OverUnderTradeDescription', () => {
     it('should render a proper content', () => {
-        render(<OverUnderTradeDescription />);
+        const mockOnTermClick = jest.fn();
+        render(<OverUnderTradeDescription onTermClick={mockOnTermClick} />);
 
-        expect(
-            screen.getByText(
-                /you will win the payout if the last digit of the last tick is greater than your prediction/i
-            )
-        ).toBeInTheDocument();
+        expect(screen.getByText(/earn a/i)).toBeInTheDocument();
     });
 });

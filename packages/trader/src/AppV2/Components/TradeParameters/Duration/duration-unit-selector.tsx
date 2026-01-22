@@ -8,11 +8,17 @@ import VerticalTabSelector from '../../InputPopover/vertical-tab-selector';
 interface DurationUnitSelectorProps {
     selectedUnit: string;
     onSelectUnit: (unit: string) => void;
+    availableUnits?: string[];
     className?: string;
 }
 
-const DurationUnitSelector: React.FC<DurationUnitSelectorProps> = ({ selectedUnit, onSelectUnit, className }) => {
-    const DURATION_UNITS: VerticalTabItem[] = useMemo(
+const DurationUnitSelector: React.FC<DurationUnitSelectorProps> = ({
+    selectedUnit,
+    onSelectUnit,
+    availableUnits,
+    className,
+}) => {
+    const ALL_DURATION_UNITS: VerticalTabItem[] = useMemo(
         () => [
             { value: 't', label: localize('Ticks') },
             { value: 's', label: localize('Seconds') },
@@ -23,6 +29,13 @@ const DurationUnitSelector: React.FC<DurationUnitSelectorProps> = ({ selectedUni
         ],
         []
     );
+
+    const DURATION_UNITS = useMemo(() => {
+        if (!availableUnits || availableUnits.length === 0) {
+            return ALL_DURATION_UNITS;
+        }
+        return ALL_DURATION_UNITS.filter(unit => availableUnits.includes(unit.value));
+    }, [availableUnits, ALL_DURATION_UNITS]);
 
     return (
         <VerticalTabSelector

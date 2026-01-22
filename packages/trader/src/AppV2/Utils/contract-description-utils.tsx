@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Localize, localize } from '@deriv-com/translations';
 import { Text } from '@deriv-com/quill-ui';
+import { Localize, localize } from '@deriv-com/translations';
 
 import VideoFragment from 'AppV2/Components/Guide/Description/video-fragment';
 import { DESCRIPTION_VIDEO_ID } from 'Modules/Trading/Helpers/video-config';
@@ -26,11 +26,14 @@ export const getTerm = () => ({
     EXPIRY: localize('Expiry'),
     FINAL_PRICE: localize('Final price'),
     GROWTH_RATE: localize('Growth rate'),
+    INDEX: localize('Index'),
     PAYOUT: localize('Payout'),
     PAYOUT_PER_POINT: localize('Payout per point'),
     PREVIOUS_SPOT_PRICE: localize('Previous spot price'),
     RANGE: localize('Range'),
     SLIPPAGE_RISK: localize('Slippage risk'),
+    SPOT_PRICE: localize('Spot price'),
+    STAKE: localize('Stake'),
     STOP_OUT_LEVEL: localize('Stop out level'),
     STOP_LOSS: localize('Stop loss'),
     STRIKE_PRICE: localize('Strike price'),
@@ -47,11 +50,14 @@ const getDefinition = () => {
         EXPIRY,
         FINAL_PRICE,
         GROWTH_RATE,
+        INDEX,
         PAYOUT,
         PAYOUT_PER_POINT,
         PREVIOUS_SPOT_PRICE,
         RANGE,
         SLIPPAGE_RISK,
+        SPOT_PRICE,
+        STAKE,
         STOP_OUT_LEVEL,
         STOP_LOSS,
         STRIKE_PRICE,
@@ -99,6 +105,9 @@ const getDefinition = () => {
         [GROWTH_RATE]: (
             <Localize i18n_default_text='You can choose a growth rate with values of 1%, 2%, 3%, 4%, and 5%.' />
         ),
+        [INDEX]: (
+            <Localize i18n_default_text='An index represents a group of assets or markets, such as volatility indices or basket indices.' />
+        ),
         [PAYOUT]: (contract_type: string) => {
             if (contract_type === CONTRACT_LIST.VANILLAS) {
                 return (
@@ -128,6 +137,8 @@ const getDefinition = () => {
             ) : (
                 <Localize i18n_default_text='Slippage happens when the asset price changes by the time it reaches our servers.' />
             ),
+        [SPOT_PRICE]: <Localize i18n_default_text='The current market price of the underlying asset.' />,
+        [STAKE]: <Localize i18n_default_text='The amount you choose to invest in a trade.' />,
         [STOP_OUT_LEVEL]: (
             <Localize i18n_default_text='Your trade will be closed automatically at the nearest available asset price when your loss reaches a certain percentage of your stake, but your loss never exceeds your stake. This percentage depends on the chosen underlying asset and the Multiplier.' />
         ),

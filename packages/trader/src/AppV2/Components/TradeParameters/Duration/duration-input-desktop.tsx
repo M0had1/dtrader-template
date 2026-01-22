@@ -114,7 +114,7 @@ const DurationInputDesktop: React.FC<TDurationInputDesktopProps> = observer(({ u
                 value={inputValue}
                 onChange={handleInputChange}
                 placeholder={localize(unit === 's' ? 'Seconds' : 'Minutes')}
-                variant='outline'
+                variant='fill'
                 inputMode='numeric'
                 maxLength={unit === 's' ? 2 : 3}
                 message={error || getRangeMessage()}

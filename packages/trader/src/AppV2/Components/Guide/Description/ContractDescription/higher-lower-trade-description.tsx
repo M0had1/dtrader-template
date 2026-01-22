@@ -2,19 +2,51 @@ import React from 'react';
 
 import { Localize } from '@deriv-com/translations';
 
-import { getContractDescription } from 'AppV2/Utils/contract-description-utils';
+import { getContractDescription, getTerm } from 'AppV2/Utils/contract-description-utils';
 import { CONTRACT_LIST } from 'AppV2/Utils/trade-types-utils';
 
-const HigherLowerTradeDescription = () => {
+const HigherLowerTradeDescription = ({ onTermClick }: { onTermClick: (term: string) => void }) => {
+    const { BARRIER, EXPIRY, EXIT_SPOT, PAYOUT } = getTerm();
     const [higher, lower] = CONTRACT_LIST.HIGHER_LOWER.split('/');
     const content = [
+        {
+            type: 'paragraph',
+            text: (
+                <Localize
+                    i18n_default_text='Higher/Lower lets you predict if the market price will end higher or lower than a set <0>barrier</0> at contract <1>expiry</1> (<2>exit spot</2>).'
+                    components={[
+                        <button
+                            className='description__content--definition'
+                            key={0}
+                            onClick={() => onTermClick(BARRIER)}
+                        />,
+                        <button
+                            className='description__content--definition'
+                            key={1}
+                            onClick={() => onTermClick(EXPIRY)}
+                        />,
+                        <button
+                            className='description__content--definition'
+                            key={2}
+                            onClick={() => onTermClick(EXIT_SPOT)}
+                        />,
+                    ]}
+                />
+            ),
+        },
         { type: 'heading', text: <Localize i18n_default_text='Higher' /> },
         {
             type: 'paragraph',
             text: (
                 <Localize
-                    i18n_default_text='If you select “<0>Higher</0>”, you win the payout if the exit spot is strictly higher than the barrier.'
-                    components={[<span className='description__content--bold' key={0} />]}
+                    i18n_default_text='Earn a <0>payout</0> if the exit spot is strictly higher than the barrier.'
+                    components={[
+                        <button
+                            className='description__content--definition'
+                            key={0}
+                            onClick={() => onTermClick(PAYOUT)}
+                        />,
+                    ]}
                 />
             ),
         },
@@ -25,21 +57,15 @@ const HigherLowerTradeDescription = () => {
         { type: 'heading', text: <Localize i18n_default_text='Lower' /> },
         {
             type: 'paragraph',
-            text: (
-                <Localize
-                    i18n_default_text='If you select “<0>Lower</0>”, you win the payout if the exit spot is strictly lower than the barrier.'
-                    components={[<span className='description__content--bold' key={0} />]}
-                />
-            ),
+            text: <Localize i18n_default_text='Earn a payout if the exit spot is strictly lower than the barrier.' />,
         },
         {
             type: 'video',
             text: lower,
         },
-        { type: 'heading', text: <Localize i18n_default_text='Additional Information' /> },
         {
             type: 'paragraph',
-            text: <Localize i18n_default_text='If the exit spot is equal to the barrier, you don’t win the payout.' />,
+            text: <Localize i18n_default_text="If the exit spot is equal to the barrier, you don't earn the payout." />,
         },
     ];
     return <React.Fragment>{getContractDescription(content)}</React.Fragment>;

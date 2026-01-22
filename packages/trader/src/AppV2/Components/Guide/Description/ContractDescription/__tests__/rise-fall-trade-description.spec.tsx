@@ -10,8 +10,9 @@ jest.mock('@lottiefiles/dotlottie-react', () => ({
 
 describe('RiseFallTradeDescription', () => {
     it('should render a proper content', () => {
-        render(<RiseFallTradeDescription />);
+        const mockOnTermClick = jest.fn();
+        render(<RiseFallTradeDescription onTermClick={mockOnTermClick} />);
 
-        expect(screen.getByText(/you win the payout if exit spot is higher than/i)).toBeInTheDocument();
+        expect(screen.getByText(/earn a/i)).toBeInTheDocument();
     });
 });

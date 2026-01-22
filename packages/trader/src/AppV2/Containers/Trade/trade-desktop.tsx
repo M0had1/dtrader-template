@@ -9,18 +9,17 @@ import { useStore } from '@deriv/stores';
 
 import AccountHeader from 'AppV2/Components/AccountHeader';
 import AccumulatorStats from 'AppV2/Components/AccumulatorStats';
-import CurrentSpot from 'AppV2/Components/CurrentSpot';
 import Guide from 'AppV2/Components/Guide';
 import OnboardingGuide from 'AppV2/Components/OnboardingGuide/GuideForPages';
 import PurchaseButton from 'AppV2/Components/PurchaseButton';
 import TradeErrorSnackbar from 'AppV2/Components/TradeErrorSnackbar';
 import { TradeParameters } from 'AppV2/Components/TradeParameters';
+import TradeParamsFooter from 'AppV2/Components/TradeParamsFooter';
 // Commented out to use chart's native market selector instead
 // import MarketSelector from 'AppV2/Components/MarketSelector';
 import useContractsFor from 'AppV2/Hooks/useContractsFor';
 import useDefaultSymbol from 'AppV2/Hooks/useDefaultSymbol';
 import { getDisplayedContractTypes } from 'AppV2/Utils/trade-types-utils';
-import { isDigitTradeType } from 'Modules/Trading/Helpers/digits';
 import { useTraderStore } from 'Stores/useTraderStores';
 
 import { TradeChart } from '../Chart';
@@ -125,7 +124,6 @@ const TradeDesktop = observer(() => {
                     {/* <MarketSelector /> */}
                     <div className='trade-container-v2__grid'>
                         <div className='trade-container-v2__chart-tooltip'>
-                            {isDigitTradeType(contract_type) && <CurrentSpot />}
                             <section
                                 className={clsx('trade-container-v2__chart', {
                                     'trade-container-v2__chart--with-borderRadius': !is_accumulator,
@@ -143,6 +141,7 @@ const TradeDesktop = observer(() => {
                             <Guide show_guide_for_selected_contract />
                             <TradeParameters />
                             {!is_market_closed && <PurchaseButton />}
+                            <TradeParamsFooter />
                         </div>
                     </div>
                     {!guide_dtrader_v2?.trade_page && is_logged_in && <OnboardingGuide type='trade_page' />}

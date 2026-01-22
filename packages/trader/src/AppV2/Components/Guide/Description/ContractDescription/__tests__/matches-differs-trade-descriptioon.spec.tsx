@@ -10,12 +10,9 @@ jest.mock('@lottiefiles/dotlottie-react', () => ({
 
 describe('MatchesDiffersTradeDescription', () => {
     it('should render a proper content', () => {
-        render(<MatchesDiffersTradeDescription />);
+        const mockOnTermClick = jest.fn();
+        render(<MatchesDiffersTradeDescription onTermClick={mockOnTermClick} />);
 
-        expect(
-            screen.getByText(
-                /you will win the payout if the last digit of the last tick is not the same as your prediction/i
-            )
-        ).toBeInTheDocument();
+        expect(screen.getByText(/earn a/i)).toBeInTheDocument();
     });
 });

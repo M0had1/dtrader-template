@@ -10,14 +10,16 @@ const InputPopover = ({
     triggerRef,
     children,
     className,
-    popoverWidth = 280,
+    popoverWidth = 240,
     spacing = 16,
+    placement = 'left',
 }: InputPopoverProps) => {
     const position = usePopoverPosition({
         triggerRef,
         isOpen,
         popoverWidth,
         spacing,
+        placement,
     });
 
     if (!isOpen) return null;

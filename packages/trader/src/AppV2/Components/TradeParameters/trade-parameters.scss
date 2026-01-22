@@ -5,6 +5,9 @@
     flex-direction: column;
     gap: var(--core-spacing-800);
     padding: var(--core-spacing-800);
+    height: 100%;
+    position: relative;
+    padding-bottom: 0;
 
     @include mobile-screen {
         background-color: unset;
@@ -155,6 +158,93 @@
 
     &__text--disabled {
         color: var(--component-textIcon-normal-disabled);
+    }
+
+    &__field-with-info {
+        position: relative;
+    }
+
+    &__info-icon-wrapper {
+        position: absolute;
+        right: var(--core-spacing-800);
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1;
+        pointer-events: auto;
+    }
+
+    &__info-icon {
+        cursor: pointer;
+        display: block;
+        fill: var(--component-textIcon-normal-prominent);
+
+        &:hover {
+            fill: var(--component-textIcon-normal-default);
+        }
+    }
+
+    &__tooltip-trigger {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    &__parameter-tooltip {
+        // Override TooltipPortal content styles for proper theming
+        .dc-tooltip-portal__content {
+            background-color: var(--color-surface-inverse);
+            color: var(--color-text-inverse);
+            border-radius: var(--core-borderRadius-100);
+            padding: var(--core-spacing-400) var(--core-spacing-800);
+            font-size: var(--core-fontSize-75);
+            line-height: var(--core-lineHeight-100);
+            max-width: 320px;
+            box-shadow: var(--core-shadow-200);
+
+            // Override Quill UI Text component styles in tooltip
+            .quill-typography {
+                color: var(--color-text-inverse);
+                font-size: var(--core-fontSize-75);
+                line-height: var(--core-lineHeight-100);
+                margin-bottom: var(--core-spacing-400);
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+
+            // Override SectionMessage styles in tooltip
+            .quill-section-message {
+                background-color: rgba(255, 255, 255, 0.1);
+                border-color: rgba(255, 255, 255, 0.2);
+                margin-top: var(--core-spacing-400);
+
+                .quill-typography {
+                    color: var(--color-text-inverse);
+                }
+            }
+        }
+
+        // Override TooltipPortal arrow styles
+        .dc-tooltip-portal__arrow--left {
+            border-left-color: var(--color-surface-inverse);
+        }
+    }
+
+    &__parameter-tooltip-content {
+        position: relative;
+    }
+
+    &__parameter-tooltip-arrow {
+        position: absolute;
+        right: -6px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-left: 6px solid var(--color-surface-inverse);
     }
 }
 

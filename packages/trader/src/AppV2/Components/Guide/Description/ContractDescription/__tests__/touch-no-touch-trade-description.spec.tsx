@@ -10,8 +10,9 @@ jest.mock('@lottiefiles/dotlottie-react', () => ({
 
 describe('TouchNoTouchTradeDescription', () => {
     it('should render a proper content', () => {
-        render(<TouchNoTouchTradeDescription />);
+        const mockOnTermClick = jest.fn();
+        render(<TouchNoTouchTradeDescription onTermClick={mockOnTermClick} />);
 
-        expect(screen.getByText(/you win the payout if the market never touches the barrier/i)).toBeInTheDocument();
+        expect(screen.getByText(/earn a/i)).toBeInTheDocument();
     });
 });

@@ -1,0 +1,25 @@
+.duration-end-date-desktop {
+    &__popover {
+        .react-calendar {
+            background: transparent;
+            border: none;
+            width: 100%;
+            font-size: 1.4rem;
+
+            * {
+                font-size: 1.4rem;
+            }
+        }
+
+        .quill-date-picker {
+            padding: 0;
+        }
+    }
+
+    &__message {
+        font-size: 1.2rem;
+        color: var(--component-textIcon-normal-subtle);
+        line-height: 2rem;
+        padding: 0 0.8rem;
+    }
+}

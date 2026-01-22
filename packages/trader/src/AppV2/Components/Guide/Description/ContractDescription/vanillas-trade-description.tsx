@@ -5,12 +5,31 @@ import { Localize } from '@deriv-com/translations';
 import { getContractDescription, getTerm } from 'AppV2/Utils/contract-description-utils';
 
 const VanillasTradeDescription = ({ onTermClick }: { onTermClick: (term: string) => void }) => {
-    const { PAYOUT, FINAL_PRICE, STRIKE_PRICE, EXPIRY, PAYOUT_PER_POINT, CONTRACT_VALUE } = getTerm();
+    const { STRIKE_PRICE, EXPIRY, EXIT_SPOT, PAYOUT, PAYOUT_PER_POINT, STAKE, CONTRACT_VALUE } = getTerm();
     const content = [
         {
-            type: 'general',
+            type: 'paragraph',
             text: (
-                <Localize i18n_default_text='Vanilla options allow you to predict an upward (bullish) or downward (bearish) direction of the underlying asset by purchasing a “Call” or a “Put”.' />
+                <Localize
+                    i18n_default_text="Vanillas allow you to predict if the underlying asset's price will be above or below the <0>strike price</0> at contract <1>expiry</1> (<2>exit spot</2>)."
+                    components={[
+                        <button
+                            className='description__content--definition'
+                            key={0}
+                            onClick={() => onTermClick(STRIKE_PRICE)}
+                        />,
+                        <button
+                            className='description__content--definition'
+                            key={1}
+                            onClick={() => onTermClick(EXPIRY)}
+                        />,
+                        <button
+                            className='description__content--definition'
+                            key={2}
+                            onClick={() => onTermClick(EXIT_SPOT)}
+                        />,
+                    ]}
+                />
             ),
         },
         {
@@ -21,28 +40,12 @@ const VanillasTradeDescription = ({ onTermClick }: { onTermClick: (term: string)
             type: 'paragraph',
             text: (
                 <Localize
-                    i18n_default_text='If you select “<0>Call</0>”, you’ll earn a <1>payout</1> if the <2>final price</2> is above the <3>strike price</3> at <4>expiry</4>. Otherwise, you won’t receive a payout.'
+                    i18n_default_text='Earn a <0>payout</0> if the exit spot is above the strike price at expiry.'
                     components={[
-                        <span className='description__content--bold' key={0} />,
                         <button
                             className='description__content--definition'
-                            key={1}
+                            key={0}
                             onClick={() => onTermClick(PAYOUT)}
-                        />,
-                        <button
-                            className='description__content--definition'
-                            key={2}
-                            onClick={() => onTermClick(FINAL_PRICE)}
-                        />,
-                        <button
-                            className='description__content--definition'
-                            key={3}
-                            onClick={() => onTermClick(STRIKE_PRICE)}
-                        />,
-                        <button
-                            className='description__content--definition'
-                            key={4}
-                            onClick={() => onTermClick(EXPIRY)}
                         />,
                     ]}
                 />
@@ -58,26 +61,17 @@ const VanillasTradeDescription = ({ onTermClick }: { onTermClick: (term: string)
         },
         {
             type: 'paragraph',
-            text: (
-                <Localize
-                    i18n_default_text='If you select “<0>Put</0>”, you’ll earn a payout if the final price is below the strike price at expiry. Otherwise, you won’t receive a payout.'
-                    components={[<span className='description__content--bold' key={0} />]}
-                />
-            ),
+            text: <Localize i18n_default_text='Earn a payout if the exit spot is below the strike price at expiry.' />,
         },
         {
             type: 'video',
             text: 'vanillas_put',
         },
         {
-            type: 'heading',
-            text: <Localize i18n_default_text='Additional Information' />,
-        },
-        {
             type: 'paragraph',
             text: (
                 <Localize
-                    i18n_default_text='Your payout is equal to the <0>payout per point</0> multiplied by the difference between the final price and the strike price. You will only earn a profit if your payout is higher than your initial stake.'
+                    i18n_default_text='Payout = <0>Payout per point</0> × Difference between exit spot and strike price'
                     components={[
                         <button
                             className='description__content--definition'
@@ -92,7 +86,22 @@ const VanillasTradeDescription = ({ onTermClick }: { onTermClick: (term: string)
             type: 'paragraph',
             text: (
                 <Localize
-                    i18n_default_text='You may sell the contract up to 60 seconds before expiry. If you do, we’ll pay you the <0>contract value</0>.'
+                    i18n_default_text='You make a profit only if the payout is greater than your <0>stake</0>.'
+                    components={[
+                        <button
+                            className='description__content--definition'
+                            key={0}
+                            onClick={() => onTermClick(STAKE)}
+                        />,
+                    ]}
+                />
+            ),
+        },
+        {
+            type: 'paragraph',
+            text: (
+                <Localize
+                    i18n_default_text="You may sell your contract up to 60 seconds before expiry. If you do, we'll pay you the <0>contract value</0>."
                     components={[
                         <button
                             className='description__content--definition'
