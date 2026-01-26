@@ -2149,6 +2149,7 @@ export default class TradeStore extends BaseStore {
                 accumulators_low_barrier?: string;
                 barrier_spot_distance?: string;
                 previous_spot_time?: number;
+                underlying?: string;
             }
 
             if (this.is_accumulator) {
@@ -2160,6 +2161,7 @@ export default class TradeStore extends BaseStore {
                     current_spot_data = {
                         current_spot: quote,
                         current_spot_time: epoch,
+                        underlying: symbol,
                     };
                 } else if ('history' in args[0]) {
                     const { prices, times } = args[0].history as History;
@@ -2169,6 +2171,7 @@ export default class TradeStore extends BaseStore {
                         current_spot: prices?.[prices?.length - 1],
                         current_spot_time: times?.[times?.length - 1],
                         previous_spot_time: times?.[times?.length - 2],
+                        underlying: symbol,
                     };
                 } else {
                     return;
