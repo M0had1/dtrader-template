@@ -158,17 +158,12 @@
         <meta name="google" content="notranslate" />
         <meta name="referrer" content="origin" />
 
-        <!-- DNS prefetch for critical domains -->
-        <link rel="dns-prefetch" href="https://api.deriv.com" />
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-
-        <!-- Preconnect for critical resources -->
+        <!-- Preconnect for critical resources (establishes early connections) -->
         <link rel="preconnect" href="https://api.deriv.com" />
+        <link rel="preconnect" href="https://auth.deriv.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://browser-update.org" />
 
         <!-- Load all fonts in single request with all required weights and language subsets -->
         <!-- Includes weights: 300,400,500,700 | Subsets: Latin, Cyrillic (Russian), Vietnamese -->
