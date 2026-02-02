@@ -563,7 +563,7 @@ describe('<ToggleMenuDrawer />', () => {
             );
         });
 
-        it('should show Help centre button when bridge is available', async () => {
+        it('should hide Help centre button when bridge is available', async () => {
             const user = userEvent.setup({ delay: null });
             useMobileBridge.mockReturnValue({
                 sendBridgeEvent: mockSendBridgeEvent,
@@ -576,7 +576,7 @@ describe('<ToggleMenuDrawer />', () => {
 
             const helpCentreItems = screen.getAllByTestId('drawer-item');
             const helpCentreItem = helpCentreItems.find(item => item.textContent?.includes('Help centre'));
-            expect(helpCentreItem).toBeInTheDocument();
+            expect(helpCentreItem).toBeUndefined();
         });
 
         it('should show Help centre button when bridge is not available', async () => {

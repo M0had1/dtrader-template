@@ -8,7 +8,6 @@ import {
     LabelPairedLifeRingMdRegularIcon,
     LegacyChartsIcon,
     LegacyChevronRight1pxIcon,
-    LegacyHelpCentreIcon,
     LegacyHomeOldIcon,
     LegacyLogout1pxIcon,
     LegacyMenuHamburger1pxIcon,
@@ -138,17 +137,17 @@ const ToggleMenuDrawer = observer(() => {
         );
     };
 
-    // eslint-disable-next-line no-unused-vars -- Kept for future restoration
     const showHelpCentre = () => {
         return (
-            <MobileDrawer.Item>
-                <MenuLink
-                    link_to={/* TODO: add redirect to Help centre */ ''}
-                    icon={<LegacyHelpCentreIcon />}
-                    text={localize('Help centre')}
-                    onClickLink={toggleDrawer}
-                />
-            </MobileDrawer.Item>
+            !isBridgeAvailable && (
+                <MobileDrawer.Item onClick={handleHelpCentreClick}>
+                    <MenuLink
+                        icon={<LabelPairedLifeRingMdRegularIcon />}
+                        text={localize('Help centre')}
+                        onClickLink={toggleDrawer}
+                    />
+                </MobileDrawer.Item>
+            )
         );
     };
 
@@ -251,19 +250,7 @@ const ToggleMenuDrawer = observer(() => {
                                         />
                                     </div>
                                 </MobileDrawer.Item>
-                                <MobileDrawer.Item
-                                    className='header__menu-mobile-theme'
-                                    onClick={handleHelpCentreClick}
-                                >
-                                    <div className={classNames('header__menu-mobile-link')}>
-                                        <LabelPairedLifeRingMdRegularIcon
-                                            fill='var(--color-text-primary)'
-                                            style={{ marginRight: '16px' }}
-                                        />
-                                        <span className='header__menu-mobile-link-text'>{localize('Help centre')}</span>
-                                    </div>
-                                </MobileDrawer.Item>
-                                {/* {showHelpCentre()} */}
+                                {showHelpCentre()}
                                 {/* {showResponsibleTrading()} */}
                                 {/* {showRegulatoryInformation()} */}
                                 {cs_chat_whatsapp && (
