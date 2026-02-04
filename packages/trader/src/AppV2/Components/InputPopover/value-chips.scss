@@ -19,7 +19,7 @@
         transition: all 0.2s ease;
         font-size: 1.6rem;
 
-        &:hover {
+        &:hover:not(&--selected) {
             background: var(--component-segmentedControl-bg-single-item-hover);
             transform: scale(1.02);
             color: var(--color-text-primary);
