@@ -1,10 +1,13 @@
 .duration-end-time-desktop {
-    &__popover {
-        padding: 0 !important;
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        gap: var(--core-spacing-400);
+    }
 
-        .quill-date-picker {
-            padding: 0;
-        }
+    &__field {
+        // TextField styling handled by Quill UI
     }
 
     &__message {
@@ -14,11 +17,61 @@
         padding: 0 0.8rem;
     }
 
-    &__picker-content {
+    &__footer {
+        margin-top: auto;
+        padding-top: var(--core-spacing-400);
+
+        button {
+            font-size: 1.6rem !important;
+            font-weight: bold !important;
+            border-radius: 10rem !important;
+        }
+    }
+
+    &__save-button {
+        width: 100%;
+    }
+
+    // Date Picker Popover
+    &__date-popover {
+        .react-calendar {
+            background: transparent;
+            border: none;
+            width: 100%;
+            font-size: 1.4rem;
+
+            * {
+                font-size: 1.4rem;
+            }
+        }
+
+        .quill-date-picker {
+            padding: 0;
+        }
+    }
+
+    &__date-picker-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    // Time Picker Popover
+    &__time-popover {
+        padding: 0 !important;
+    }
+
+    &__time-picker-content {
         display: flex;
         flex-direction: column;
         gap: 1.2rem;
         padding: 1.6rem;
-        height: 100%;
+    }
+
+    &__time-picker-footer {
+        button {
+            font-size: 1.6rem !important;
+            font-weight: bold !important;
+            border-radius: 10rem !important;
+        }
     }
 }

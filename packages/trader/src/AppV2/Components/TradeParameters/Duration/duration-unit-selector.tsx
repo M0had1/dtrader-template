@@ -25,7 +25,6 @@ const DurationUnitSelector: React.FC<DurationUnitSelectorProps> = ({
             { value: 'm', label: localize('Minutes') },
             { value: 'h', label: localize('Hours') },
             { value: 'end_time', label: localize('End time') },
-            { value: 'end_date', label: localize('End date') },
         ],
         []
     );

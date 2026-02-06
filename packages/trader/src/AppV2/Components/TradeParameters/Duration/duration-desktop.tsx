@@ -22,7 +22,6 @@ import { TabSelector } from '../../InputPopover';
 import { ChipsWithInputToggle } from '../Shared';
 import TradeParameterPopover, { useTradeParameterPopover } from '../Shared/TradeParameterPopover';
 
-import DurationEndDateDesktop from './duration-end-date-desktop';
 import DurationEndTimeDesktop from './duration-end-time-desktop';
 import DurationHoursInputDesktop from './duration-hours-input-desktop';
 import DurationInputDesktop from './duration-input-desktop';
@@ -52,7 +51,6 @@ const DurationPopoverContent: React.FC<{
     onDurationSelect: (value: number) => void;
     onHourSelect: (hours: number) => void;
     onEndTimeSelect: (time: string) => void;
-    onEndDateSelect: (days: number) => void;
     onUnitSelect: (unit: string) => void;
     onTabChange: (tab: 'chips' | 'input') => void;
     formatTickValue: (value: number) => string;
@@ -60,7 +58,6 @@ const DurationPopoverContent: React.FC<{
     formatMinutesValue: (value: number) => string;
     formatHoursValue: (value: number) => string;
     formatEndTimeValue: (value: string) => string;
-    formatEndDateValue: (value: number) => string;
 }> = ({
     selectedUnit,
     activeTab,
@@ -72,7 +69,6 @@ const DurationPopoverContent: React.FC<{
     onDurationSelect,
     onHourSelect,
     onEndTimeSelect,
-    onEndDateSelect,
     onUnitSelect,
     onTabChange,
     formatTickValue,
@@ -80,13 +76,12 @@ const DurationPopoverContent: React.FC<{
     formatMinutesValue,
     formatHoursValue,
     formatEndTimeValue,
-    formatEndDateValue,
 }) => {
     const { closePopover } = useTradeParameterPopover();
 
     // Safety check: If config is null, automatically switch to a valid unit
     React.useEffect(() => {
-        const validUnits = ['t', 's', 'm', 'h', 'end_time', 'end_date'];
+        const validUnits = ['t', 's', 'm', 'h', 'end_time'];
         if (!validUnits.includes(selectedUnit)) {
             // Find first valid unit from available units
             const firstValid = availableUnits.find(unit => validUnits.includes(unit));
@@ -120,29 +115,14 @@ const DurationPopoverContent: React.FC<{
         [onEndTimeSelect, closePopover]
     );
 
-    const handleEndDateSelectAndClose = useCallback(
-        (days: number) => {
-            onEndDateSelect(days);
-            closePopover();
-        },
-        [onEndDateSelect, closePopover]
-    );
-
-    // Helper function to check if a unit has a valid config
-    const hasValidConfig = useCallback((unit: string): boolean => {
-        const validUnits = ['t', 's', 'm', 'h', 'end_time', 'end_date'];
-        return validUnits.includes(unit);
-    }, []);
-
     const config = useMemo(() => {
         // Get market category and trade type for preset lookup
         const symbolData = getSymbolMarketData(symbol, active_symbols);
         const marketCategory = mapSymbolToMarketCategory(symbolData?.market, symbolData?.submarket, symbolData?.symbol);
         const tradeTypeKey = mapContractTypeToDurationPresetKey(contract_type);
 
-        // Default chip values for end_time and end_date (not trade-type specific)
+        // Default chip values for end_time (not trade-type specific)
         const defaultEndTimeChips = ['15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
-        const defaultEndDateChips = [1, 2, 3, 5, 7, 14];
 
         // Fallback chip values if presets not found
         const fallbackTicks = [5, 10, 15, 20, 25, 30];
@@ -192,13 +172,6 @@ const DurationPopoverContent: React.FC<{
                 formatValue: formatEndTimeValue as (value: number | string) => string,
                 inputComponent: <DurationEndTimeDesktop onClose={closePopover} />,
             },
-            end_date: {
-                chipValues: defaultEndDateChips,
-                selectedValue: selectedDuration,
-                onSelect: handleEndDateSelectAndClose as (value: number | string) => void,
-                formatValue: formatEndDateValue as (value: number | string) => string,
-                inputComponent: <DurationEndDateDesktop onClose={closePopover} />,
-            },
         };
         return configs[selectedUnit] || null;
     }, [
@@ -210,20 +183,18 @@ const DurationPopoverContent: React.FC<{
         handleDurationSelectAndClose,
         handleHourSelectAndClose,
         handleEndTimeSelectAndClose,
-        handleEndDateSelectAndClose,
         formatTickValue,
         formatSecondsValue,
         formatMinutesValue,
         formatHoursValue,
         formatEndTimeValue,
-        formatEndDateValue,
         closePopover,
     ]);
 
     const hasOnlyOneUnit = availableUnits.length === 1;
 
-    // Check if presets are disabled for the current unit (end_time and end_date don't use presets from config)
-    const presetsDisabled = selectedUnit === 'end_time' || selectedUnit === 'end_date';
+    // Check if presets are disabled for the current unit (end_time doesn't use presets from config)
+    const presetsDisabled = selectedUnit === 'end_time';
 
     return (
         <div className={`duration-popover__layout ${hasOnlyOneUnit ? 'duration-popover__layout--single-unit' : ''}`}>
@@ -300,33 +271,26 @@ const DurationDesktop: React.FC<DurationDesktopProps> = observer(({ is_minimized
         // We should NOT filter these out based on presets - presets are only for chip values
         const units = duration_units_list.map(unit => unit.value);
 
-        // Add end_time and end_date for contracts that support them
-        // (they're expiry types, not duration units, so they're not in duration_units_list)
-        // Match mobile behavior: only show end_time/end_date when duration_units_list.length > 1
+        // Add end_time for contracts that support it
+        // (it's an expiry type, not a duration unit, so it's not in duration_units_list)
+        // Match mobile behavior: only show end_time when duration_units_list.length > 1
         // This ensures forex markets (or any market with only 1 duration unit) don't show end time option
-        // HOWEVER: If the current state is using end_time or end_date, we must include them
+        // HOWEVER: If the current state is using endtime expiry, we must include it
         // regardless of duration_units_list.length to avoid breaking the modal
         const show_end_time = duration_units_list.length > 1;
-        const is_currently_using_end_time = expiry_type === 'endtime' && expiry_time && !expiry_date;
-        const is_currently_using_end_date = expiry_type === 'endtime' && expiry_date;
-        // Special case: 'd' (days) is a duration_unit that represents end_date
+        const is_currently_using_endtime = expiry_type === 'endtime';
+        // Special case: 'd' (days) is a duration_unit that maps to end_time (combined date+time picker)
         const is_currently_using_days = duration_unit === 'd';
 
-        // Add end_time only when appropriate (NOT when using days)
-        if ((show_end_time || is_currently_using_end_time) && !is_currently_using_days) {
+        // Add end_time when appropriate
+        if (show_end_time || is_currently_using_endtime || is_currently_using_days) {
             if (!units.includes('end_time')) {
                 units.push('end_time');
             }
         }
 
-        // Add end_date when using end_date expiry type OR when using days duration unit
-        if (show_end_time || is_currently_using_end_date || is_currently_using_days) {
-            if (!units.includes('end_date')) {
-                units.push('end_date');
-            }
-        }
         return units;
-    }, [duration_units_list, expiry_type, expiry_time, expiry_date, duration_unit]);
+    }, [duration_units_list, expiry_type, duration_unit]);
 
     const popoverWidth = React.useMemo(() => {
         // Use narrower width for single-unit contracts (like digit contracts)
@@ -337,35 +301,30 @@ const DurationDesktop: React.FC<DurationDesktopProps> = observer(({ is_minimized
     // If duration_unit is an expiry type (like 'endtime'), default to first available unit
     // Helper function to get the first valid unit from available units
     const getFirstValidUnit = React.useCallback((units: string[]): string => {
-        const validUnits = ['t', 's', 'm', 'h', 'end_time', 'end_date'];
+        const validUnits = ['t', 's', 'm', 'h', 'end_time'];
         const firstValid = units.find(unit => validUnits.includes(unit));
         return firstValid || 't'; // Fallback to 't' if no valid unit found
     }, []);
 
     const getInitialUnit = React.useCallback(() => {
-        // Special case: 'd' (days) maps to 'end_date'
+        // Special case: 'd' (days) maps to 'end_time' (combined date+time picker)
         if (duration_unit === 'd') {
-            return 'end_date';
+            return 'end_time';
         }
         // Check if current duration_unit is in available units AND has a valid config
         if (availableUnits.includes(duration_unit)) {
-            const validUnits = ['t', 's', 'm', 'h', 'end_time', 'end_date'];
+            const validUnits = ['t', 's', 'm', 'h', 'end_time'];
             if (validUnits.includes(duration_unit)) {
                 return duration_unit;
             }
         }
-        // If expiry_type is 'endtime', check if we should use end_time or end_date
+        // If expiry_type is 'endtime', use end_time (combined date+time picker)
         if (expiry_type === 'endtime') {
-            if (expiry_time && !expiry_date) {
-                return 'end_time';
-            }
-            if (expiry_date) {
-                return 'end_date';
-            }
+            return 'end_time';
         }
         // Default to first valid unit from available units
         return getFirstValidUnit(availableUnits);
-    }, [duration_unit, expiry_type, expiry_time, expiry_date, availableUnits, getFirstValidUnit]);
+    }, [duration_unit, expiry_type, availableUnits, getFirstValidUnit]);
 
     const [selectedUnit, setSelectedUnit] = useState(() => getInitialUnit());
     const [selectedDuration, setSelectedDuration] = useState(duration);
@@ -374,21 +333,17 @@ const DurationDesktop: React.FC<DurationDesktopProps> = observer(({ is_minimized
     const handleOpenPopover = useCallback(() => {
         // Use the same logic as getInitialUnit to determine which unit to show
         let unitToShow = duration_unit;
-        const validUnits = ['t', 's', 'm', 'h', 'end_time', 'end_date'];
+        const validUnits = ['t', 's', 'm', 'h', 'end_time'];
 
-        // Special case: 'd' (days) maps to 'end_date'
+        // Special case: 'd' (days) maps to 'end_time' (combined date+time picker)
         if (duration_unit === 'd') {
-            unitToShow = 'end_date';
+            unitToShow = 'end_time';
         }
         // If duration_unit is not in available units (e.g., it's an expiry type)
         else if (!availableUnits.includes(duration_unit)) {
-            // If expiry_type is 'endtime', check if we should use end_time or end_date
+            // If expiry_type is 'endtime', use end_time (combined date+time picker)
             if (expiry_type === 'endtime') {
-                if (expiry_time && !expiry_date) {
-                    unitToShow = 'end_time';
-                } else if (expiry_date) {
-                    unitToShow = 'end_date';
-                }
+                unitToShow = 'end_time';
             } else {
                 // Default to first valid unit from available units
                 unitToShow = getFirstValidUnit(availableUnits);
@@ -401,7 +356,7 @@ const DurationDesktop: React.FC<DurationDesktopProps> = observer(({ is_minimized
         setSelectedUnit(unitToShow);
         setSelectedDuration(duration);
         setActiveTab('chips'); // Always start with chips tab
-    }, [duration, duration_unit, expiry_type, expiry_time, expiry_date, availableUnits, getFirstValidUnit]);
+    }, [duration, duration_unit, expiry_type, availableUnits, getFirstValidUnit]);
 
     const handleClosePopover = useCallback(() => {
         setActiveTab('chips'); // Reset to chips tab on close
@@ -410,7 +365,7 @@ const DurationDesktop: React.FC<DurationDesktopProps> = observer(({ is_minimized
     const handleUnitSelect = useCallback(
         (unit: string) => {
             // Validate that the selected unit has a valid config
-            const validUnits = ['t', 's', 'm', 'h', 'end_time', 'end_date'];
+            const validUnits = ['t', 's', 'm', 'h', 'end_time'];
 
             if (validUnits.includes(unit)) {
                 // Unit has a valid config, proceed with selection
@@ -488,32 +443,11 @@ const DurationDesktop: React.FC<DurationDesktopProps> = observer(({ is_minimized
         return value; // Time is already formatted as HH:MM
     }, []);
 
-    const formatEndDateValue = useCallback((value: number) => {
-        const date = new Date();
-        date.setDate(date.getDate() + value);
-        const month = date.toLocaleDateString('en-US', { month: 'short' });
-        const day = date.getDate();
-        return `${day} ${month}`;
-    }, []);
-
     const handleEndTimeSelect = useCallback(
         (time: string) => {
             onChangeMultiple({
                 expiry_type: 'endtime',
                 expiry_time: time,
-            });
-        },
-        [onChangeMultiple]
-    );
-
-    const handleEndDateSelect = useCallback(
-        (days: number) => {
-            const date = new Date();
-            date.setDate(date.getDate() + days);
-            const formattedDate = date.toISOString().split('T')[0];
-            onChangeMultiple({
-                expiry_type: 'endtime',
-                expiry_date: formattedDate,
             });
         },
         [onChangeMultiple]
@@ -608,7 +542,6 @@ const DurationDesktop: React.FC<DurationDesktopProps> = observer(({ is_minimized
                 onDurationSelect={handleDurationSelect}
                 onHourSelect={handleHourSelect}
                 onEndTimeSelect={handleEndTimeSelect}
-                onEndDateSelect={handleEndDateSelect}
                 onUnitSelect={handleUnitSelect}
                 onTabChange={handleTabChange}
                 formatTickValue={formatTickValue}
@@ -616,7 +549,6 @@ const DurationDesktop: React.FC<DurationDesktopProps> = observer(({ is_minimized
                 formatMinutesValue={formatMinutesValue}
                 formatHoursValue={formatHoursValue}
                 formatEndTimeValue={formatEndTimeValue}
-                formatEndDateValue={formatEndDateValue}
             />
         </TradeParameterPopover>
     );

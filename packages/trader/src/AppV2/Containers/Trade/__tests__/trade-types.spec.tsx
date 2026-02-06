@@ -23,7 +23,7 @@ jest.mock('@deriv/api', () => ({
 
 jest.mock('@deriv-com/ui', () => ({
     ...jest.requireActual('@deriv-com/ui'),
-    useDevice: jest.fn(() => ({ isDesktop: false })),
+    useDevice: jest.fn(() => ({ isMobile: true })),
 }));
 
 const mockGetTradeTypesList = getTradeTypesList as jest.MockedFunction<typeof getTradeTypesList>;
@@ -88,7 +88,7 @@ describe('TradeTypes', () => {
         // Reset useDevice mock to default (mobile)
         const { useDevice } = jest.requireMock('@deriv-com/ui');
         (useDevice as jest.Mock).mockReturnValue({
-            isDesktop: false,
+            isMobile: true,
         });
     });
     beforeAll(() => {

@@ -57,7 +57,7 @@ export type TResultItem = {
 const TradeTypes = ({ contract_type, onTradeTypeSelect, trade_types, is_dark_mode_on }: TTradeTypesProps) => {
     const { localize } = useTranslations();
     const { isBridgeAvailable } = useMobileBridge();
-    const { isDesktop } = useDevice();
+    const { isMobile } = useDevice();
     const [is_open, setIsOpen] = React.useState<boolean>(false);
     const [is_editing, setIsEditing] = React.useState<boolean>(false);
     const [is_guide_open, setIsGuideOpen] = React.useState<boolean>(false);
@@ -256,7 +256,7 @@ const TradeTypes = ({ contract_type, onTradeTypeSelect, trade_types, is_dark_mod
 
     const trade_type_chips = getTradeTypeChips();
     const should_show_view_all =
-        (trade_type_chips.length >= 2 || getItems(other_trade_types).length > 0) && !isBridgeAvailable && !isDesktop;
+        (trade_type_chips.length >= 2 || getItems(other_trade_types).length > 0) && !isBridgeAvailable && isMobile;
     const show_trade_type_list_divider = !!other_trade_types[0]?.items?.length;
     const show_editing_divider = trade_types_array.length !== pinned_trade_types[0]?.items?.length;
     const trade_type_content_props = {
