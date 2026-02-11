@@ -100,8 +100,28 @@ export const mapContractTypeToStakePresetKey = (
  */
 export const mapContractTypeToDurationPresetKey = (
     contract_type: string
-): 'rise_fall' | 'higher_lower' | 'touch_no_touch' | 'vanillas' | 'turbos' | undefined => {
+):
+    | 'rise_fall'
+    | 'higher_lower'
+    | 'touch_no_touch'
+    | 'vanillas'
+    | 'turbos'
+    | 'digits_matches_differs'
+    | 'digits_even_odd'
+    | 'digits_over_under'
+    | undefined => {
     const normalized = contract_type.toLowerCase();
+
+    // Digits subtypes
+    if (normalized === TRADE_TYPES.MATCH_DIFF) {
+        return 'digits_matches_differs';
+    }
+    if (normalized === TRADE_TYPES.EVEN_ODD) {
+        return 'digits_even_odd';
+    }
+    if (normalized === TRADE_TYPES.OVER_UNDER) {
+        return 'digits_over_under';
+    }
 
     // Rise/Fall (including equals variant)
     if (normalized === TRADE_TYPES.RISE_FALL || normalized === TRADE_TYPES.RISE_FALL_EQUAL) {

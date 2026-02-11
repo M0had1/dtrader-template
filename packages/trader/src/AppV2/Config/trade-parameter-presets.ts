@@ -85,6 +85,9 @@ export interface DurationPresets {
     touch_no_touch: DurationPresetsByMarket;
     vanillas: DurationPresetsByMarket;
     turbos: DurationPresetsByMarket;
+    digits_matches_differs: DurationPresetsByMarket;
+    digits_even_odd: DurationPresetsByMarket;
+    digits_over_under: DurationPresetsByMarket;
 }
 
 /**
@@ -240,7 +243,7 @@ export const TRADE_PARAMETER_PRESETS: TradeParameterPresets = {
         higher_lower: {
             // Daily Reset Indices
             daily_reset_indices: {
-                t: [1, 2, 3, 4, 5, 6, 8, 10],
+                t: [5, 6, 7, 8, 9, 10],
                 s: [15, 20, 25, 30, 40, 45, 50, 55],
                 m: [2, 3, 5, 10, 15, 20, 30, 45],
                 h: [1, 2, 3, 4, 6, 8, 12, 24],
@@ -343,6 +346,45 @@ export const TRADE_PARAMETER_PRESETS: TradeParameterPresets = {
                 d: [1, 2, 3, 5, 7, 14, 21, 30],
             },
         },
+
+        // ========================================
+        // DIGITS - MATCHES/DIFFERS DURATION PRESETS
+        // ========================================
+        digits_matches_differs: {
+            volatility_indices: {
+                t: [1, 2, 3, 5, 7, 10],
+                s: null,
+                m: null,
+                h: null,
+                d: null,
+            },
+        },
+
+        // ========================================
+        // DIGITS - EVEN/ODD DURATION PRESETS
+        // ========================================
+        digits_even_odd: {
+            volatility_indices: {
+                t: [1, 2, 3, 5, 7, 10],
+                s: null,
+                m: null,
+                h: null,
+                d: null,
+            },
+        },
+
+        // ========================================
+        // DIGITS - OVER/UNDER DURATION PRESETS
+        // ========================================
+        digits_over_under: {
+            volatility_indices: {
+                t: [1, 2, 3, 5, 7, 10],
+                s: null,
+                m: null,
+                h: null,
+                d: null,
+            },
+        },
     },
 };
 
@@ -385,8 +427,18 @@ export const getDurationPresets = (
     durationUnit: keyof DurationPresetsByUnit
 ): DurationUnitPresets | undefined => {
     const tradeTypePresets = TRADE_PARAMETER_PRESETS.duration[tradeType];
-    const marketPresets = tradeTypePresets?.[marketCategory];
-    return marketPresets?.[durationUnit];
+    if (!tradeTypePresets) return undefined;
+
+    const marketPresets = tradeTypePresets[marketCategory];
+    if (marketPresets) return marketPresets[durationUnit];
+
+    // Fallback: if the exact market category isn't configured, use the first available market
+    const availableMarkets = Object.keys(tradeTypePresets) as MarketCategory[];
+    if (availableMarkets.length > 0) {
+        return tradeTypePresets[availableMarkets[0]]?.[durationUnit];
+    }
+
+    return undefined;
 };
 
 /**

@@ -146,7 +146,7 @@ const DurationPopoverContent: React.FC<{
         const defaultEndTimeChips = ['15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
 
         // Fallback chip values if presets not found
-        const fallbackTicks = [5, 10, 15, 20, 25, 30];
+        const fallbackTicks = [1, 2, 3, 5, 7, 10];
         const fallbackSeconds = [15, 30, 45, 60, 90, 120];
         const fallbackMinutes = [1, 2, 3, 5, 10, 15];
         const fallbackHours = [1, 2, 4, 8, 12, 24];
