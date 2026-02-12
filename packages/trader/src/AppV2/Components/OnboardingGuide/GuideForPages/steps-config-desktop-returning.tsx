@@ -21,6 +21,7 @@ const RETURNING_DESKTOP_STEPS: Step[] = [
         target: '.trade-types-selector__button',
         title: <Localize i18n_default_text='Explore trade types (2/4)' />,
         placement: 'bottom-start' as Step['placement'],
+        disableScrollParentFix: true,
     },
     {
         content: <Localize i18n_default_text='All trade settings are now in one place.' />,

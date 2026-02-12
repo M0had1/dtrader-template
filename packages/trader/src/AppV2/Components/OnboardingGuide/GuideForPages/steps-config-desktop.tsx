@@ -13,6 +13,7 @@ const DESKTOP_STEPS: Step[] = [
         target: '.trade-types-selector__button',
         title: <Localize i18n_default_text='Explore trade types (1/5)' />,
         placement: 'bottom-start' as Step['placement'],
+        disableScrollParentFix: true,
     },
     {
         content: <Localize i18n_default_text='View available markets here.' />,
