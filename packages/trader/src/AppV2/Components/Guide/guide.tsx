@@ -87,7 +87,7 @@ const Guide = observer(
                     (isMobile ? (
                         <Button
                             color={is_dark_mode_on ? 'white' : 'black'}
-                            className='trade-container-v2__guide'
+                            className='trade__guide'
                             onClick={() => {
                                 trackAnalyticsEvent('ce_trade_types_form_v2', {
                                     action: 'info_open',

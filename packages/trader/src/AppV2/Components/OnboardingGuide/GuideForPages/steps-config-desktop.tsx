@@ -27,7 +27,7 @@ const DESKTOP_STEPS: Step[] = [
         content: <Localize i18n_default_text='Track market trends with our interactive charts.' />,
         spotlightPadding: 8,
         offset: 4,
-        target: '.trade-container-v2__chart-tooltip',
+        target: '.trade__chart-tooltip',
         title: <Localize i18n_default_text='Analyse with charts (3/5)' />,
         placement: 'right-start' as Step['placement'],
         floaterProps: {

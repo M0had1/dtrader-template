@@ -1,14 +1,18 @@
 $BOTTOM_NAV_HEIGHT: var(--core-spacing-2800);
 
 .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    height: $BOTTOM_NAV_HEIGHT;
-    width: 100%;
-    padding: var(--core-spacing-200);
-    border-top: 1px solid var(--component-navigationBar-border-color);
-    z-index: 30;
-
+    &-container {
+        padding: var(--core-spacing-200);
+        width: 100%;
+        border-top: 1px solid var(--component-navigationBar-border-color);
+        height: $BOTTOM_NAV_HEIGHT;
+        z-index: 30;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--component-navigationBar-background-color);
+    }
     &-item {
         font-size: var(--core-fontSize-50);
 
@@ -25,11 +29,11 @@ $BOTTOM_NAV_HEIGHT: var(--core-spacing-2800);
         }
         &--active {
             .quill-navigation-bottom-bar__action-label {
-                color: var(--component-navigationBar-label-color-selected);
+                color: var(--color-nav-item-active);
             }
 
             svg {
-                fill: var(--component-navigationBar-icon-selected);
+                fill: var(--color-nav-item-active);
             }
         }
         &--positions {

@@ -20,10 +20,7 @@ const TradeLoader = () => {
                     <Skeleton />
                 </div>
                 <div className='skeleton-box__trade-params'>
-                    <Skeleton height={164} />
-                </div>
-                <div className='skeleton-box__trade-params'>
-                    <Skeleton height={56} />
+                    <Skeleton height={220} />
                 </div>
             </div>
         );

@@ -348,7 +348,7 @@ const TradeTypes = ({ contract_type, onTradeTypeSelect, trade_types, is_dark_mod
     }
 
     return (
-        <div className='trade-container-v2__trade-types' ref={trade_types_ref}>
+        <div className='trade__trade-types' ref={trade_types_ref}>
             <TradeTypesSelector
                 available_contracts={AVAILABLE_CONTRACTS.filter(contract =>
                     trade_types.some(tt => contract.for.includes(tt.value))
@@ -397,7 +397,7 @@ const TradeTypes = ({ contract_type, onTradeTypeSelect, trade_types, is_dark_mod
                     key='trade-types-all'
                     onClick={handleOpenActionSheet}
                     variant='tertiary'
-                    className='trade-container-v2__trade-types-header'
+                    className='trade__trade-types-header'
                     color={is_dark_mode_on ? 'white' : 'black'}
                 >
                     <Text size='sm' bold underlined color='var(--component-button-label-color-blackWhite-tertiary)'>

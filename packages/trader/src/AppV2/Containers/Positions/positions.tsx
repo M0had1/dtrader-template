@@ -78,8 +78,8 @@ const Positions = observer(() => {
     }, []);
 
     return (
-        <div className='positions-page'>
-            <div className='positions-page-container'>
+        <>
+            <div className='positions-page'>
                 <Tab.Container
                     contentStyle='fill'
                     className='positions-page-container__tabs'
@@ -108,7 +108,7 @@ const Positions = observer(() => {
                     callback={() => setHasButtonsDemo(true)}
                 />
             )}
-        </div>
+        </>
     );
 });
 

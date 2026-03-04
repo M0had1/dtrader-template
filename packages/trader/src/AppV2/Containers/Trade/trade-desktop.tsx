@@ -122,16 +122,16 @@ const TradeDesktop = observer(() => {
     }, [current_language, network_status.class]);
 
     return (
-        <div
-            className={clsx('trade-container-v2', {
-                'trade-container-v2__logout': !is_logged_in,
-                'trade-container-v2--flyout-open': active_sidebar_flyout !== null,
-            })}
-        >
+        <>
             {should_show_portrait_loader && <Loader isFullScreen />}
             {symbols.length && trade_types.length ? (
-                <React.Fragment>
-                    <div className='trade-container-v2__header'>
+                <div
+                    className={clsx('trade', {
+                        trade__logout: !is_logged_in,
+                        'trade--flyout-open': active_sidebar_flyout !== null,
+                    })}
+                >
+                    <div className='trade__header'>
                         <TradeTypes
                             contract_type={contract_type}
                             onTradeTypeSelect={onTradeTypeSelect}
@@ -142,11 +142,11 @@ const TradeDesktop = observer(() => {
                     </div>
                     {/* Commented out to use chart's native market selector instead */}
                     {/* <MarketSelector /> */}
-                    <div className='trade-container-v2__grid'>
-                        <div className='trade-container-v2__chart-tooltip'>
+                    <div className='trade__grid'>
+                        <div className='trade__chart-tooltip'>
                             <section
-                                className={clsx('trade-container-v2__chart', {
-                                    'trade-container-v2__chart--with-borderRadius': !is_accumulator,
+                                className={clsx('trade__chart', {
+                                    'trade__chart--with-borderRadius': !is_accumulator,
                                 })}
                                 style={{
                                     height: '100%',
@@ -172,7 +172,7 @@ const TradeDesktop = observer(() => {
                     {/* [AI] Desktop onboarding - returning mobile users */}
                     {is_logged_in && <OnboardingGuideDesktopReturning type='trade_page' />}
                     {/* [/AI] */}
-                </React.Fragment>
+                </div>
             ) : (
                 <Loading.DTraderV2 />
             )}
@@ -180,7 +180,7 @@ const TradeDesktop = observer(() => {
                 error_fields={['stop_loss', 'take_profit', 'date_start', 'stake', 'amount']}
                 should_show_snackbar={should_show_snackbar}
             />
-        </div>
+        </>
     );
 });
 

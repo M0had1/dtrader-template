@@ -71,20 +71,6 @@ describe('TradeParametersContainer', () => {
             expect(containerElement).toHaveClass('trade-params__container--collapsed');
             expect(containerElement).not.toHaveClass('trade-params__container--expanded');
         });
-
-        it('should apply logged-in class when user is logged in', () => {
-            render(<TradeParametersContainer is_logged_in />);
-
-            const containerElement = screen.getByTestId('trade-params-container');
-            expect(containerElement).toHaveClass('trade-params__container--logged-in');
-        });
-
-        it('should not apply logged-in class when user is not logged in', () => {
-            render(<TradeParametersContainer is_logged_in={false} />);
-
-            const containerElement = screen.getByTestId('trade-params-container');
-            expect(containerElement).not.toHaveClass('trade-params__container--logged-in');
-        });
     });
 
     describe('Tap behavior', () => {

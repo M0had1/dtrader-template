@@ -66,9 +66,6 @@ jest.mock('AppV2/Components/PurchaseButton', () =>
 jest.mock('AppV2/Components/TradeErrorSnackbar', () =>
     jest.fn(() => <div data-testid='trade-error-snackbar'>TradeErrorSnackbar</div>)
 );
-jest.mock('AppV2/Components/ClosedMarketMessage', () =>
-    jest.fn(() => <div data-testid='closed-market-message'>ClosedMarketMessage</div>)
-);
 jest.mock('AppV2/Components/TradeParameters', () => ({
     TradeParametersContainer: jest.fn(({ is_market_closed, is_logged_in }) => (
         <div data-testid='trade-params-container' data-logged-in={is_logged_in}>
@@ -341,12 +338,6 @@ describe('Trade', () => {
             renderTrade();
 
             expect(screen.queryByTestId('accumulator-stats')).not.toBeInTheDocument();
-        });
-
-        it('should render ClosedMarketMessage component', () => {
-            renderTrade();
-
-            expect(screen.getByTestId('closed-market-message')).toBeInTheDocument();
         });
 
         it('should not render PurchaseButton when market is closed', () => {

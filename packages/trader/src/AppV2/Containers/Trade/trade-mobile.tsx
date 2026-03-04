@@ -8,7 +8,6 @@ import { getSymbolDisplayName, trackAnalyticsEvent } from '@deriv/shared';
 import { useStore } from '@deriv/stores';
 
 import AccumulatorStats from 'AppV2/Components/AccumulatorStats';
-import ClosedMarketMessage from 'AppV2/Components/ClosedMarketMessage';
 import CurrentSpot from 'AppV2/Components/CurrentSpot';
 import Guide from 'AppV2/Components/Guide';
 import MarketSelector from 'AppV2/Components/MarketSelector';
@@ -115,33 +114,30 @@ const Trade = observer(() => {
     }, []);
 
     return (
-        <div className='trade' data-testid='dt_trade-mobile'>
+        <>
             {symbols.length && trade_types.length ? (
                 <React.Fragment>
-                    <div className='trade-container-v2'>
+                    <div className='trade'>
                         <TradeTypes
                             contract_type={contract_type}
                             onTradeTypeSelect={onTradeTypeSelect}
                             trade_types={trade_types}
                             is_dark_mode_on={is_dark_mode_on}
                         />
-                        <div className='trade-container-v2__market-selector-guide'>
+                        <div className='trade__market-selector-guide'>
                             <MarketSelector />
                             <Guide show_guide_for_selected_contract />
                         </div>
                         {isDigitTradeType(contract_type) && <CurrentSpot />}
-                        <div className='trade-container-v2__chart-tooltip'>
+                        <div className='trade__chart-tooltip'>
                             <section
-                                className={clsx('trade-container-v2__chart', {
-                                    'trade-container-v2__chart--with-borderRadius': !is_accumulator,
-                                })}
+                                className={clsx('trade__chart', { 'trade__chart--with-borderRadius': !is_accumulator })}
                                 style={{
                                     height: getChartHeight({
                                         is_accumulator,
                                         symbol,
                                         has_cancellation,
                                         contract_type,
-                                        is_logged_in,
                                     }),
                                 }}
                                 ref={chart_ref}
@@ -150,12 +146,9 @@ const Trade = observer(() => {
                             </section>
                         </div>
                         {is_accumulator && <AccumulatorStats />}
-                        <ClosedMarketMessage />
                     </div>
-                    <TradeParametersContainer is_market_closed={is_market_closed} is_logged_in={is_logged_in} />
-                    {!guide_dtrader_v2?.trade_page && is_logged_in && (
-                        <OnboardingGuide type='trade_page' is_dark_mode_on={is_dark_mode_on} />
-                    )}
+                    <TradeParametersContainer is_market_closed={is_market_closed} />
+                    {is_logged_in && <OnboardingGuide type='trade_page' is_dark_mode_on={is_dark_mode_on} />}
                 </React.Fragment>
             ) : (
                 <Loading.DTraderV2 />
@@ -164,7 +157,7 @@ const Trade = observer(() => {
                 error_fields={['stop_loss', 'take_profit', 'date_start', 'stake', 'amount']}
                 should_show_snackbar={should_show_snackbar}
             />
-        </div>
+        </>
     );
 });
 
