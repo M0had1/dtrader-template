@@ -197,7 +197,6 @@ This platform uses several `@deriv-com/*` packages that are open source. Forkers
 | `@deriv-com/translations`         | i18n translation provider and locale loading          |
 | `@deriv-com/quill-ui`             | Design system: Quill UI components and theme provider |
 | `@deriv-com/smartcharts-champion` | Trading chart library (candlestick, line, etc.)       |
-| `@deriv-com/analytics`            | Analytics and DataDog RUM integration                 |
 
 These packages provide the core UI and charting infrastructure. Replacing them would require source code changes beyond the scope of this white-labeling guide.
 

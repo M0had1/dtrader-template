@@ -152,9 +152,9 @@ const generateSWConfig = () => ({
                 },
             },
         },
-        // CDN resources (GTM, analytics, cookies) - try network first with timeout
+        // CDN resources (fonts, libraries) - try network first with timeout
         {
-            urlPattern: /^https:\/\/(www\.googletagmanager\.com|cdn\.jsdelivr\.net)\/.*/i,
+            urlPattern: /^https:\/\/(cdn\.jsdelivr\.net)\/.*/i,
             handler: 'StaleWhileRevalidate',
             options: {
                 cacheName: 'cdn-resources',

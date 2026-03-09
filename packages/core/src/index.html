@@ -161,8 +161,6 @@
         <link rel="preconnect" href="<%= htmlWebpackPlugin.options.templateParameters.auth_url %>" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-
         <!-- Load all fonts in single request with all required weights and language subsets -->
         <!-- Includes weights: 300,400,500,700 | Subsets: Latin, Cyrillic (Russian), Vietnamese -->
         <link
@@ -216,15 +214,5 @@
         <div id="modal_root" class="modal-root"></div>
         <!-- modal_root has background color. So, it cannot be used for toast messages. For those cases popup_root is used -->
         <div id="popup_root" class="popup-root"></div>
-
-        <!-- GTM NoScript fallback (inline required for users with JS disabled) -->
-        <noscript
-            ><iframe
-                src="https://www.googletagmanager.com/ns.html?id=GTM-NF7884S"
-                height="0"
-                width="0"
-                style="display: none; visibility: hidden"
-            ></iframe
-        ></noscript>
     </body>
 </html>
