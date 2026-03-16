@@ -1,4 +1,4 @@
-import { getAuthBaseUrl, getOAuthClientId, getOAuthRedirectUri, getSignupUrl } from '../brand';
+import { getAuthBaseUrl, getOAuthAppId, getOAuthClientId, getOAuthRedirectUri, getSignupUrl } from '../brand';
 
 // ---------------------------------------------------------------------------
 // PKCE helpers (duplicated here to avoid circular dependency with core)
@@ -57,6 +57,8 @@ export const redirectToLogin = async (_language?: string): Promise<void> => {
         code_challenge: challenge,
         code_challenge_method: 'S256',
     });
+    const oauth_app_id = getOAuthAppId();
+    if (oauth_app_id) params.set('app_id', oauth_app_id);
 
     const auth_url = `${getAuthBaseUrl()}/oauth2/auth?${params}`;
     window.location.replace(auth_url);

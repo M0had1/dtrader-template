@@ -24,6 +24,8 @@ const requiredStrings = [
     ['brand_hostname.production', config.brand_hostname?.production],
     ['platform.name', config.platform?.name],
     ['auth.production', config.auth?.production],
+    ['deposit_url.staging', config.deposit_url?.staging],
+    ['deposit_url.production', config.deposit_url?.production],
     ['api_core.production', config.api_core?.production],
     ['api.production', config.api?.production],
 ];

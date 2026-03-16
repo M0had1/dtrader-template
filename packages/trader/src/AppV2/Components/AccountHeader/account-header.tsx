@@ -6,7 +6,7 @@ import { useDerivativesAccount, useMobileBridge } from '@deriv/api';
 import { Button, Skeleton, Text } from '@deriv/components';
 import AccountSwitcher from '@deriv/core/src/App/Components/Layout/Header/account-switcher';
 import { LegacyChevronDown1pxIcon } from '@deriv/quill-icons';
-import { addComma, getBrandUrl, getCurrencyDisplayCode, getSignupUrl, redirectToLogin } from '@deriv/shared';
+import { addComma, getDepositUrl, getCurrencyDisplayCode, getSignupUrl, redirectToLogin } from '@deriv/shared';
 import { useStore } from '@deriv/stores';
 import { Localize, useTranslations } from '@deriv-com/translations';
 import { useDevice } from '@deriv-com/ui';
@@ -102,10 +102,8 @@ const AccountHeader = observer(
                 ui.toggleTryRealModal(true);
             } else {
                 // Transfer button (for both account types or real-only accounts)
-                const brandUrl = getBrandUrl();
-                const lang_param = common.current_language ? `&lang=${common.current_language}` : '';
                 sendBridgeEvent('trading:transfer', () => {
-                    window.location.href = `${brandUrl}/transfer?from=dtrader&source=options&acc=options&curr=${currency}${lang_param}`;
+                    window.location.href = getDepositUrl();
                 });
             }
         };

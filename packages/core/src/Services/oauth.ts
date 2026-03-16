@@ -1,4 +1,4 @@
-import { getAuthBaseUrl, getOAuthClientId, getOAuthRedirectUri } from '@deriv/shared';
+import { getAuthBaseUrl, getOAuthAppId, getOAuthClientId, getOAuthRedirectUri } from '@deriv/shared';
 
 // ---------------------------------------------------------------------------
 // PKCE helpers
@@ -69,6 +69,8 @@ export const generateOAuthURL = async (): Promise<string> => {
         code_challenge: challenge,
         code_challenge_method: 'S256',
     });
+    const oauth_app_id = getOAuthAppId();
+    if (oauth_app_id) params.set('app_id', oauth_app_id);
 
     return `${getAuthBaseUrl()}/oauth2/auth?${params}`;
 };

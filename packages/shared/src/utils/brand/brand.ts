@@ -170,6 +170,10 @@ export const getOAuthClientId = (): string => {
 /**
  * Gets the OAuth2 redirect URI for the current environment
  */
+export const getOAuthAppId = (): string => {
+    return ((config_data.auth as Record<string, unknown>).oauth_app_id as string) ?? '';
+};
+
 export const getOAuthRedirectUri = (): string => {
     const auth = config_data.auth as Record<string, unknown>;
     return isProduction()
@@ -248,6 +252,14 @@ export const getHomeUrl = (): string => {
 
 export const getHelpCentreUrl = (): string => {
     return substituteDerivDomain(config_data.platform.help_centre_url);
+};
+
+export const getDepositUrl = (): string => {
+    const deposit = (config_data as Record<string, unknown>).deposit_url as
+        | { staging: string; production: string }
+        | undefined;
+    if (!deposit) return '';
+    return substituteDerivDomain(isProduction() ? deposit.production : deposit.staging);
 };
 
 export const getSignupUrl = (): string => {
