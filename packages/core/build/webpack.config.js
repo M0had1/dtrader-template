@@ -13,20 +13,15 @@ module.exports = function (env) {
                 publicPath: base,
                 watch: true,
             },
-            open: {
-                app: {
-                    name: openChromeBasedOnPlatform(process.platform),
-                },
-                target: sub_path,
-            },
-            host: 'localhost',
-            server: 'https',
-
-            port: 8443,
+            open: false,
+            host: '0.0.0.0',
+            port: 5000,
+            allowedHosts: 'all',
             historyApiFallback: true,
             hot: false,
             client: {
                 overlay: false,
+                webSocketURL: 'auto://0.0.0.0:0/ws',
             },
         },
         devtool: IS_RELEASE ? 'source-map' : 'eval-cheap-module-source-map',
