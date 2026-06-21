@@ -28,7 +28,7 @@
         "oauth_scopes": ["trade", "account_manage"],
         "oauth_redirect_uri_staging": "https://staging.dtrader-template.pages.dev",
         "oauth_redirect_uri_production": "https://dtrader-template.pages.dev",
-        "oauth_app_id": ""
+        "oauth_app_id": "33BeITFXk8T0IJ8CSLrkB"
     },
     "derivws": {
         "staging": "https://staging-api.derivws.com",

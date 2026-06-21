@@ -38,3 +38,8 @@ externalPort = 80
 deploymentTarget = "static"
 build = ["bash", "-c", "npm run build:all && npm run build --workspace=@deriv/core -- /"]
 publicDir = "packages/core/dist"
+
+[userenv]
+
+[userenv.shared]
+OAUTH_CLIENT_ID = "33BeITFXk8T0IJ8CSLrkB"
