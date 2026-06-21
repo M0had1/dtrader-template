@@ -1,0 +1,2 @@
+- [CJS-to-ESM conversions](cjs-to-esm.md) — core _common/*.js files were CJS; must use ES module syntax when imported via ES `import`
+- [Workflow serve-only](workflow-serve.md) — workflow must only run `npm run serve core`; trader/reports pre-built dists persist between restarts
